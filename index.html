@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<head>
+    <title>Stracker</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="app.js"></script>
+    <script src="https://kit.fontawesome.com/a2b54467f5.js" crossorigin="anonymous"></script>
+</head>
+<body>
+    <nav id="select-nav">
+        <div id="select-nav-container">
+            <h1>Your current shows</h1>
+            <div>
+                <input id="js-new-show-input" placeholder="show name" onkeypress="enterStart(addNewShow, event);">
+                <button onclick="addNewShow();">Add</button>
+            </div>
+        </div>
+    </nav>
+
+    <main>
+        <div id="js-shows-container">
+            <div>
+                
+            </div>
+        </div>
+    </main>
+</body>
+</html>
