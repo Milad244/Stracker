@@ -55,16 +55,16 @@ function Load(){
     for(i = 0; i < Object.keys(currentShows).length; i++){
         const showObjectName = Object.keys(currentShows)[i]
         const showObject = currentShows[showObjectName];
-        const seasonMinusBoxHTML = `<div class="minus-container"><i class="fa-regular fa-square-minus fa-xl minus-box" onclick="changeShowNum('${showObject.showName}', 'season', -1)"></i></div>`
-        const episodeMinusBoxHTML = `<div class="minus-container"><i class="fa-regular fa-square-minus fa-xl minus-box" onclick="changeShowNum('${showObject.showName}', 'episode', -1)"></i></div>`
-        const seasonPlusBoxHTML = `<div class="plus-container"><i class="fa-regular fa-square-plus fa-xl plus-box" onclick="changeShowNum('${showObject.showName}', 'season', 1)"></i></div>`
-        const episodePlusBoxHTML = `<div class="plus-container"><i class="fa-regular fa-square-plus fa-xl plus-box" onclick="changeShowNum('${showObject.showName}', 'episode', 1)"></i></div>`
-        showsList.innerHTML += `<h3>${showObject.showName}</h3>
+        const seasonMinusBoxHTML = `<div class="minus-container"><i class="fa-regular fa-square-minus fa-2xl minus-box" onclick="changeShowNum('${showObject.showName}', 'season', -1)"></i></div>`
+        const episodeMinusBoxHTML = `<div class="minus-container"><i class="fa-regular fa-square-minus fa-2xl minus-box" onclick="changeShowNum('${showObject.showName}', 'episode', -1)"></i></div>`
+        const seasonPlusBoxHTML = `<div class="plus-container"><i class="fa-regular fa-square-plus fa-2xl plus-box" onclick="changeShowNum('${showObject.showName}', 'season', 1)"></i></div>`
+        const episodePlusBoxHTML = `<div class="plus-container"><i class="fa-regular fa-square-plus fa-2xl plus-box" onclick="changeShowNum('${showObject.showName}', 'episode', 1)"></i></div>`
+        showsList.innerHTML += `<div class="show-container"> <h3>${showObject.showName}</h3>
         <P>Last episode watched: Season: ${showObject.season} Episode: ${showObject.episode}</P>
-        <p>Season: ${showObject.liveSeason}</p> ${seasonMinusBoxHTML} ${seasonPlusBoxHTML}
-        <p>Episode: ${showObject.liveEpisode}</p> ${episodeMinusBoxHTML} ${episodePlusBoxHTML}
-        <p>Date: </p> <input id="${showObject.showName + 'Date'}" value="${new Date().toJSON().slice(0, 10)}" type="date">
-        <button onclick="updateShow('${showObject.showName}', ${showObject.liveSeason}, ${showObject.liveEpisode})">Watched Season ${showObject.liveSeason} Episode ${showObject.liveEpisode}</button>`
+        <div class="adjustable-div"> ${seasonMinusBoxHTML} <p class="adjustable-p"> Season: ${showObject.liveSeason}</p> ${seasonPlusBoxHTML}</div>
+        <div class="adjustable-div"> ${episodeMinusBoxHTML} <p class="adjustable-p">Episode: ${showObject.liveEpisode}</p> ${episodePlusBoxHTML}</div>
+        <div class="adjustable-div"> <p>Date: </p> <input class="date-box" id="${showObject.showName + 'Date'}" value="${new Date().toJSON().slice(0, 10)}" type="date"></div>
+        <button onclick="updateShow('${showObject.showName}', ${showObject.liveSeason}, ${showObject.liveEpisode})">Watched Season ${showObject.liveSeason} Episode ${showObject.liveEpisode}</button> <div>`
     };
 }
 

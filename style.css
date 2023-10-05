@@ -2,4 +2,111 @@ body{
     background-color: #171717;
     color: white;
     font-family: Arial;
+    padding: 0;
+    margin: 0;
 }
+
+#select-nav-container{
+    text-align: center;
+}
+#select-nav-container h1{
+    font-size: 2em;
+}
+
+#js-new-show-input{
+    padding: 5px 10px;
+    color: white;
+    background-color: #171717;
+    border: 3px solid rebeccapurple;
+    border-radius: 5px;
+}
+#js-new-show-input::placeholder{
+    color: rgba(255, 255, 255, 0.637);
+}
+#js-new-show-input:focus{
+    outline: none;
+    border: 3px solid rgb(155, 100, 210);
+}
+
+#select-nav-container button{
+    cursor: pointer;
+    padding: 5px 10px;
+    color: white;
+    background-color: #171717;
+    border: 3px solid rebeccapurple;
+    border-radius: 5px;
+}
+#select-nav-container button:hover{
+    border: 3px solid rgb(155, 100, 210);
+}
+
+#js-shows-container{
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    margin: 15px;
+    gap: 15px
+}
+.show-container{
+    border: 3px solid blue;
+    border-radius: 5px;
+    padding: 10px;
+    text-align: center;
+}
+.adjustable-div{
+    display: flex;
+    justify-content: center;
+}
+.adjustable-p{
+    min-width: 80px;
+}
+.minus-box{
+    position: relative;
+    top: 16px;
+    right: 15px;
+    cursor: pointer;
+    color: rebeccapurple;
+}
+.minus-box:hover{
+    color: rgb(155, 100, 210);
+}
+
+.plus-box{
+    position: relative;
+    top: 16px;
+    left: 15px;
+    cursor: pointer;
+    color: rebeccapurple;
+}
+.plus-box:hover{
+    color: rgb(155, 100, 210);
+}
+
+.date-box{
+    height: 20px;
+    margin: 11px 7px;
+    cursor: pointer;
+    color: white;
+    color-scheme: dark;
+    background-color: #171717;
+    border: 3px solid rebeccapurple;
+    border-radius: 5px;
+}
+.date-box:focus{
+    outline: none;
+    border: 3px solid rgb(155, 100, 210)
+}
+
+.show-container button{
+    border: 3px solid rebeccapurple;
+    border-radius: 5px;
+    padding: 5px;
+    font-size: large;
+    color: white;
+    background-color: #171717;
+    cursor: pointer;
+}
+.show-container button:hover{
+    border: 3px solid rgb(155, 100, 210);
+}
+
