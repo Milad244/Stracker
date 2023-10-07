@@ -2,32 +2,9 @@ window.onload = function() {
     Load();
 };
 
-const currentShows = {
-    Avengers: {
-        showName: 'Avengers',
-        season: 1,
-        episode: 2,
-        liveSeason: 1,
-        liveEpisode: 3
-    }
-};
+const currentShows = JSON.parse(localStorage.getItem('currentShows')) || {};
 
-const showWatchHistory = {
-    Avengers: {
-        1: {
-            showName: 'Avengers',
-            date: '2023-09-30',
-            season: 1,
-            episode: 1
-        },
-        2: {
-            showName: 'Avengers',
-            date: '2023-10-01',
-            season: 1,
-            episode: 2
-        }
-    }
-}
+const showWatchHistory = JSON.parse(localStorage.getItem('showWatchHistory')) || {};
 
 function enterStart(func, event, parameter){ 
     if (event.key === 'Enter') {
@@ -37,7 +14,7 @@ function enterStart(func, event, parameter){
 
 function addNewShow() {
     const newShow = document.querySelector('#js-new-show-input');
-    currentShows[newShow.value] = {
+    currentShows[Object.keys(currentShows).length + 1] = {
         showName: newShow.value,
         season: 1,
         episode: 0,
@@ -45,6 +22,7 @@ function addNewShow() {
         liveEpisode: 1
     };
     showWatchHistory[newShow.value] = {};
+    saveCookies();
     Load();
     newShow.value = '';
 }
@@ -52,42 +30,42 @@ function addNewShow() {
 function Load(){
     const showsList = document.querySelector('#js-shows-container')
     showsList.innerHTML = '';
-    for(i = 0; i < Object.keys(currentShows).length; i++){
-        const showObjectName = Object.keys(currentShows)[i]
-        const showObject = currentShows[showObjectName];
-        const seasonMinusBoxHTML = `<div class="minus-container"><i class="fa-regular fa-square-minus fa-2xl minus-box" onclick="changeShowNum('${showObject.showName}', 'season', -1)"></i></div>`
-        const episodeMinusBoxHTML = `<div class="minus-container"><i class="fa-regular fa-square-minus fa-2xl minus-box" onclick="changeShowNum('${showObject.showName}', 'episode', -1)"></i></div>`
-        const seasonPlusBoxHTML = `<div class="plus-container"><i class="fa-regular fa-square-plus fa-2xl plus-box" onclick="changeShowNum('${showObject.showName}', 'season', 1)"></i></div>`
-        const episodePlusBoxHTML = `<div class="plus-container"><i class="fa-regular fa-square-plus fa-2xl plus-box" onclick="changeShowNum('${showObject.showName}', 'episode', 1)"></i></div>`
+    for(i = 1; i < Object.keys(currentShows).length + 1; i++){
+        const showObject = currentShows[i];
+        const seasonMinusBoxHTML = `<div class="minus-container"><i class="fa-regular fa-square-minus fa-2xl minus-box" onclick="changeShowNum('${i}', 'season', -1)"></i></div>`
+        const episodeMinusBoxHTML = `<div class="minus-container"><i class="fa-regular fa-square-minus fa-2xl minus-box" onclick="changeShowNum('${i}', 'episode', -1)"></i></div>`
+        const seasonPlusBoxHTML = `<div class="plus-container"><i class="fa-regular fa-square-plus fa-2xl plus-box" onclick="changeShowNum('${i}', 'season', 1)"></i></div>`
+        const episodePlusBoxHTML = `<div class="plus-container"><i class="fa-regular fa-square-plus fa-2xl plus-box" onclick="changeShowNum('${i}', 'episode', 1)"></i></div>`
         showsList.innerHTML += `<div class="show-container"> <h3>${showObject.showName}</h3>
         <P>Last episode watched: Season: ${showObject.season} Episode: ${showObject.episode}</P>
         <div class="adjustable-div"> ${seasonMinusBoxHTML} <p class="adjustable-p"> Season: ${showObject.liveSeason}</p> ${seasonPlusBoxHTML}</div>
         <div class="adjustable-div"> ${episodeMinusBoxHTML} <p class="adjustable-p">Episode: ${showObject.liveEpisode}</p> ${episodePlusBoxHTML}</div>
-        <div class="adjustable-div"> <p>Date: </p> <input class="date-box" id="${showObject.showName + 'Date'}" value="${new Date().toJSON().slice(0, 10)}" type="date"></div>
-        <button onclick="updateShow('${showObject.showName}', ${showObject.liveSeason}, ${showObject.liveEpisode})">Watched Season ${showObject.liveSeason} Episode ${showObject.liveEpisode}</button> <div>`
+        <div class="adjustable-div"> <p>Date: </p> <input class="date-box" id="${'Date' + i}" value="${new Date().toJSON().slice(0, 10)}" type="date"></div>
+        <button onclick="updateShow(${i}, ${showObject.liveSeason}, ${showObject.liveEpisode})">Watched Season ${showObject.liveSeason} Episode ${showObject.liveEpisode}</button> <div>`
     };
 }
 
-function changeShowNum(name, seasonOrEpisode, amount) {
-    const showObject = currentShows[name];
+function changeShowNum(index, seasonOrEpisode, amount) {
+    const showObject = currentShows[index];
     if (seasonOrEpisode === 'season') {
         showObject.liveSeason += amount;
     }
     else {
         showObject.liveEpisode += amount;
     }
+    saveCookies();
     Load();
 }
 
-function updateShow(name, season, episode) {
-    const showObject = currentShows[name];
+function updateShow(index, season, episode) {
+    const showObject = currentShows[index];
     showObject.season = season;
     showObject.episode = episode;
     showObject.liveEpisode ++;
     
-    showWatchHistory[name][Object.keys(showWatchHistory[name]).length + 1] = {
-        showName: name,
-        date: document.querySelector('#' + name + 'Date').value,
+    showWatchHistory[showObject.showName][Object.keys(showWatchHistory[showObject.showName]).length + 1] = {
+        showName: showObject.showName,
+        date: document.querySelector('#Date'+ index).value,
         season: season,
         episode: episode
     }
@@ -98,5 +76,12 @@ function updateShow(name, season, episode) {
 }
 
 function saveCookies() {
-    
+    localStorage.setItem('currentShows', JSON.stringify(currentShows));
+    localStorage.setItem('showWatchHistory', JSON.stringify(showWatchHistory));
+}
+
+function deleteAll() {
+    localStorage.removeItem('currentShows');
+    localStorage.removeItem('showWatchHistory');
+    location.reload();
 }
