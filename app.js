@@ -1,5 +1,10 @@
+const filePath = '/Stracker/';
 window.onload = function() {
-    Load();
+    if (window.location.pathname === filePath + "index.html"){
+        Load('index');
+    } else if(window.location.pathname === filePath + "watch-history.html") {
+        Load('watch-history');
+    }
 };
 
 const currentShows = JSON.parse(localStorage.getItem('currentShows')) || {};
@@ -23,26 +28,35 @@ function addNewShow() {
     };
     showWatchHistory[newShow.value] = {};
     saveCookies();
-    Load();
+    Load('index');
     newShow.value = '';
 }
 
-function Load(){
-    const showsList = document.querySelector('#js-shows-container')
-    showsList.innerHTML = '';
-    for(i = 1; i < Object.keys(currentShows).length + 1; i++){
-        const showObject = currentShows[i];
-        const seasonMinusBoxHTML = `<div class="minus-container"><i class="fa-regular fa-square-minus fa-2xl minus-box" onclick="changeShowNum('${i}', 'season', -1)"></i></div>`
-        const episodeMinusBoxHTML = `<div class="minus-container"><i class="fa-regular fa-square-minus fa-2xl minus-box" onclick="changeShowNum('${i}', 'episode', -1)"></i></div>`
-        const seasonPlusBoxHTML = `<div class="plus-container"><i class="fa-regular fa-square-plus fa-2xl plus-box" onclick="changeShowNum('${i}', 'season', 1)"></i></div>`
-        const episodePlusBoxHTML = `<div class="plus-container"><i class="fa-regular fa-square-plus fa-2xl plus-box" onclick="changeShowNum('${i}', 'episode', 1)"></i></div>`
-        showsList.innerHTML += `<div class="show-container"> <h3>${showObject.showName}</h3>
-        <P>Last episode watched: Season: ${showObject.season} Episode: ${showObject.episode}</P>
-        <div class="adjustable-div"> ${seasonMinusBoxHTML} <p class="adjustable-p"> Season: ${showObject.liveSeason}</p> ${seasonPlusBoxHTML}</div>
-        <div class="adjustable-div"> ${episodeMinusBoxHTML} <p class="adjustable-p">Episode: ${showObject.liveEpisode}</p> ${episodePlusBoxHTML}</div>
-        <div class="adjustable-div"> <p>Date: </p> <input class="date-box" id="${'Date' + i}" value="${new Date().toJSON().slice(0, 10)}" type="date"></div>
-        <button onclick="updateShow(${i}, ${showObject.liveSeason}, ${showObject.liveEpisode})">Watched Season ${showObject.liveSeason} Episode ${showObject.liveEpisode}</button> <div>`
-    };
+function Load(page){
+    if (page === 'index') {
+        const showsList = document.querySelector('#js-shows-container');
+        showsList.innerHTML = '';
+        for(i = 1; i < Object.keys(currentShows).length + 1; i++){
+            const showObject = currentShows[i];
+            const seasonMinusBoxHTML = `<div class="minus-container"><i class="fa-regular fa-square-minus fa-2xl minus-box" onclick="changeShowNum('${i}', 'season', -1)"></i></div>`
+            const episodeMinusBoxHTML = `<div class="minus-container"><i class="fa-regular fa-square-minus fa-2xl minus-box" onclick="changeShowNum('${i}', 'episode', -1)"></i></div>`
+            const seasonPlusBoxHTML = `<div class="plus-container"><i class="fa-regular fa-square-plus fa-2xl plus-box" onclick="changeShowNum('${i}', 'season', 1)"></i></div>`
+            const episodePlusBoxHTML = `<div class="plus-container"><i class="fa-regular fa-square-plus fa-2xl plus-box" onclick="changeShowNum('${i}', 'episode', 1)"></i></div>`
+            showsList.innerHTML += `<div class="show-container"> <h3>${showObject.showName}</h3>
+            <P>Last episode watched: Season: ${showObject.season} Episode: ${showObject.episode}</P>
+            <div class="adjustable-div"> ${seasonMinusBoxHTML} <p class="adjustable-p"> Season: ${showObject.liveSeason}</p> ${seasonPlusBoxHTML}</div>
+            <div class="adjustable-div"> ${episodeMinusBoxHTML} <p class="adjustable-p">Episode: ${showObject.liveEpisode}</p> ${episodePlusBoxHTML}</div>
+            <div class="adjustable-div"> <p>Date: </p> <input class="date-box" id="${'Date' + i}" value="${new Date().toJSON().slice(0, 10)}" type="date"></div>
+            <button onclick="updateShow(${i}, ${showObject.liveSeason}, ${showObject.liveEpisode})">Watched Season ${showObject.liveSeason} Episode ${showObject.liveEpisode}</button> <div>`
+        };
+    } else if(page === 'watch-history') {
+        const showListContainer = document.querySelector('#js-show-list-container');
+        showListContainer.innerHTML = '';
+        Object.keys(showWatchHistory).forEach(function(value, index){
+            showListContainer.innerHTML += `<div><li onclick="makeListActive('${index}')">${value}</li></div>`;
+        });
+        makeListActive(0);
+    }
 }
 
 function changeShowNum(index, seasonOrEpisode, amount) {
@@ -54,7 +68,7 @@ function changeShowNum(index, seasonOrEpisode, amount) {
         showObject.liveEpisode += amount;
     }
     saveCookies();
-    Load();
+    Load('index');
 }
 
 function updateShow(index, season, episode) {
@@ -71,8 +85,36 @@ function updateShow(index, season, episode) {
     }
     
     saveCookies();
-    Load();
+    Load('index');
     console.log(showWatchHistory);
+}
+
+function LoginOrSignup(loginOrsignUp) {
+    const loginElement = document.querySelector('#js-login-container');
+    const signUpElement = document.querySelector('#js-signUp-container');
+    const divElement = document.getElementsByTagName('div');
+    for (i = 0; i < divElement.length; i++){
+        divElement[i].setAttribute('style', 'opacity: 20%; pointer-events: none')
+    }
+    if (loginOrsignUp === 'Login'){
+        signUpElement.classList.remove('loginOrSignup-container');
+        signUpElement.classList.add('no-display');
+        loginElement.classList.add('loginOrSignup-container');
+        loginElement.classList.remove('no-display');
+        loginElement.setAttribute('style', 'opacity: 100%; pointer-events: all');
+    } else{
+        loginElement.classList.remove('loginOrSignup-container');
+        loginElement.classList.add('no-display');
+        signUpElement.classList.add('loginOrSignup-container');
+        signUpElement.classList.remove('no-display');
+        signUpElement.setAttribute('style', 'opacity: 100%; pointer-events: all');
+    }
+}
+
+function makeListActive(listIndex){
+    const showInfoContainer = document.querySelector('#js-current-show-info');
+    const activeListName = Object.keys(showWatchHistory)[parseInt(listIndex)]
+    showInfoContainer.innerHTML = `<p>${JSON.stringify(showWatchHistory[activeListName])}</p>`;
 }
 
 function saveCookies() {

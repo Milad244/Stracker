@@ -5,6 +5,12 @@ body{
     padding: 0;
     margin: 0;
 }
+button{
+    transition: 0.3s;
+}
+.no-display{
+    display: none;
+}
 
 #select-nav-container{
     text-align: center;
@@ -36,8 +42,48 @@ body{
     border: 3px solid rebeccapurple;
     border-radius: 5px;
 }
+
+#select-nav-container .corner-button{
+    border-color: #28a0cf;
+    font-size: 1.25em;
+    position: absolute;
+}
 #select-nav-container button:hover{
     border: 3px solid rgb(155, 100, 210);
+}
+#select-nav-container .corner-button:hover{
+    border-color: #68c7ec;
+}
+#select-nav-container .top-left{
+    top: 26.5px; left: 30px;
+}
+#select-nav-container .top-right{
+    top: 26.5px; right: 30px;
+}
+
+
+.loginOrSignup-container{
+    text-align: center;
+    border: 3px solid white;
+    border-radius: 5px;
+    position: absolute;
+    width: 450px;
+    left: 0; 
+    right: 0; 
+    margin:auto;
+    padding: 15px 0;
+    opacity: 100%;
+}
+.loginOrSignup-container h1{
+    margin: 0;
+    margin-bottom: 5px;
+}
+.loginOrSignup-container input{
+    margin: 2px;
+    padding: 5px;
+}
+.login-container p{
+    margin: 2px;
 }
 
 #js-shows-container{
