@@ -156,3 +156,28 @@ button{
     border: 3px solid rgb(155, 100, 210);
 }
 
+#js-history-container{
+    display: flex;
+}
+#js-show-list-container{
+    flex: 15%;
+    max-width: 200px;
+    height: 85vh;
+    text-align: center;
+    border: 2px groove white;
+    overflow-y: auto;
+}
+#js-show-list-container li{
+    list-style: none;
+    font-size: 2em;
+    word-wrap: break-word;
+    padding-top: 15px;
+    cursor: pointer;
+    color: rgb(226, 117, 114);
+}
+#js-current-show-info{
+    flex: 85%;
+    border: 2px groove white;
+    padding: 15px;
+    overflow-y: auto;
+}

@@ -114,7 +114,12 @@ function LoginOrSignup(loginOrsignUp) {
 function makeListActive(listIndex){
     const showInfoContainer = document.querySelector('#js-current-show-info');
     const activeListName = Object.keys(showWatchHistory)[parseInt(listIndex)]
-    showInfoContainer.innerHTML = `<p>${JSON.stringify(showWatchHistory[activeListName])}</p>`;
+    const showInfoObject = showWatchHistory[activeListName];
+    showInfoContainer.innerHTML = '';
+    Object.keys(showInfoObject).forEach(function(value, index){
+        currentLog = showInfoObject[index + 1];
+        showInfoContainer.innerHTML += `<p>| Log: ${value} | Show Name: ${currentLog.showName} | Date Watched: ${currentLog.date} Season: ${currentLog.season} | Episode: ${currentLog.episode} |</p>`;
+    });
 }
 
 function saveCookies() {
