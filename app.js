@@ -1,8 +1,12 @@
-const filePath = '/Stracker/';
+const filePath = '/C:/VSCode%20Code/Stracker/';
+const filePath1 = '/Stracker/';
 window.onload = function() {
-    if (window.location.pathname === filePath + "index.html"){
+    console.log(window.location.pathname);
+    if (window.location.pathname === filePath + "index.html" || window.location.pathname === filePath1 + "index.html"){
+        console.log('in');
         Load('index');
-    } else if(window.location.pathname === filePath + "watch-history.html") {
+    } else if(window.location.pathname === filePath + "watch-history.html" || window.location.pathname === filePath1 + "watch-history.html") {
+        console.log('wh');
         Load('watch-history');
     }
 };
