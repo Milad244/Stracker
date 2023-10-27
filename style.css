@@ -42,6 +42,13 @@ button{
     border: 3px solid rebeccapurple;
     border-radius: 5px;
 }
+#finished-show-button{
+    margin-top: 10px;
+    border-color:rgb(250, 1, 250);
+}
+#finished-show-button:hover{
+    border-color:rgb(247, 87, 247);
+}
 
 #select-nav-container .corner-button{
     border-color: #28a0cf;
@@ -49,7 +56,7 @@ button{
     position: absolute;
 }
 #select-nav-container button:hover{
-    border: 3px solid rgb(155, 100, 210);
+    border-color: rgb(155, 100, 210);
 }
 #select-nav-container .corner-button:hover{
     border-color: #68c7ec;

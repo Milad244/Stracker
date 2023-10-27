@@ -31,6 +31,7 @@ function addNewShow() {
     newShow.value = '';
 }
 
+let pageDate = new Date().toJSON().slice(0, 10);
 function Load(page){
     if (page === 'index') {
         const showsList = document.querySelector('#js-shows-container');
@@ -45,8 +46,9 @@ function Load(page){
             <P>Last episode watched: Season: ${showObject.season} Episode: ${showObject.episode}</P>
             <div class="adjustable-div"> ${seasonMinusBoxHTML} <p class="adjustable-p"> Season: ${showObject.liveSeason}</p> ${seasonPlusBoxHTML}</div>
             <div class="adjustable-div"> ${episodeMinusBoxHTML} <p class="adjustable-p">Episode: ${showObject.liveEpisode}</p> ${episodePlusBoxHTML}</div>
-            <div class="adjustable-div"> <p>Date: </p> <input class="date-box" id="${'Date' + i}" value="${new Date().toJSON().slice(0, 10)}" type="date"></div>
-            <button onclick="updateShow(${i}, ${showObject.liveSeason}, ${showObject.liveEpisode})">Watched Season ${showObject.liveSeason} Episode ${showObject.liveEpisode}</button> <div>`
+            <div class="adjustable-div"> <p>Date: </p> <input class="date-box" id="${'Date' + i}" value="${pageDate}" type="date"></div>
+            <button onclick="updateShow(${i}, ${showObject.liveSeason}, ${showObject.liveEpisode})">Watched Season ${showObject.liveSeason} Episode ${showObject.liveEpisode}</button> <br>
+            <button id="finished-show-button" onclick="finishedShow(${i})">Finished This Show</button><div>`
         };
     } else if(page === 'watch-history') {
         const showListContainer = document.querySelector('#js-show-list-container');
@@ -82,10 +84,21 @@ function updateShow(index, season, episode) {
         season: season,
         episode: episode
     }
-    
+    pageDate = document.querySelector('#Date'+ index).value;
     saveCookies();
     Load('index');
-    console.log(showWatchHistory);
+}
+
+function finishedShow(index){
+    delete currentShows[index];
+    saveCookies();
+    Load('index');
+}
+
+function renewShow(listIndex){
+    const activeListName = Object.keys(showWatchHistory)[parseInt(listIndex)]
+    const finishedShowObject = showWatchHistory[activeListName];
+    console.log(finishedShowObject);
 }
 
 function LoginOrSignup(loginOrsignUp) {
@@ -114,9 +127,21 @@ function makeListActive(listIndex){
     const showInfoContainer = document.querySelector('#js-current-show-info');
     const activeListName = Object.keys(showWatchHistory)[parseInt(listIndex)]
     const showInfoObject = showWatchHistory[activeListName];
-    showInfoContainer.innerHTML = '';
+    let isFinishedShow = true;
+    for(i = 1; i < Object.keys(currentShows).length + 1; i++){
+        const currentShow = currentShows[i];
+        if (currentShow.showName === activeListName) {
+            isFinishedShow = false;
+            break;
+        }
+    }
+    if (isFinishedShow === true){
+        showInfoContainer.innerHTML = `<button onclick="renewShow(${listIndex})">Renew This Show</button>`;
+    }else {
+        showInfoContainer.innerHTML = '';
+    }
     Object.keys(showInfoObject).forEach(function(value, index){
-        currentLog = showInfoObject[index + 1];
+        const currentLog = showInfoObject[index + 1];
         showInfoContainer.innerHTML += `<p>| Log: ${value} | Show Name: ${currentLog.showName} | Date Watched: ${currentLog.date} Season: ${currentLog.season} | Episode: ${currentLog.episode} |</p>`;
     });
 }
