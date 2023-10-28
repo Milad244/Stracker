@@ -10,6 +10,8 @@ const currentShows = JSON.parse(localStorage.getItem('currentShows')) || {};
 
 const showWatchHistory = JSON.parse(localStorage.getItem('showWatchHistory')) || {};
 
+const finishedShows = JSON.parse(localStorage.getItem('finishedShows')) || {};
+
 function enterStart(func, event, parameter){ 
     if (event.key === 'Enter') {
         func(parameter);
@@ -64,6 +66,7 @@ function changeShowNum(index, seasonOrEpisode, amount) {
     const showObject = currentShows[index];
     if (seasonOrEpisode === 'season') {
         showObject.liveSeason += amount;
+        showObject.liveEpisode = 1;
     }
     else {
         showObject.liveEpisode += amount;
@@ -90,15 +93,18 @@ function updateShow(index, season, episode) {
 }
 
 function finishedShow(index){
+    finishedShows[Object.keys(finishedShows).length + 1] = currentShows[index];
     delete currentShows[index];
     saveCookies();
     Load('index');
 }
 
-function renewShow(listIndex){
-    const activeListName = Object.keys(showWatchHistory)[parseInt(listIndex)]
-    const finishedShowObject = showWatchHistory[activeListName];
-    console.log(finishedShowObject);
+function renewShow(index){
+    const finishedShowObject = finishedShows[index];
+    currentShows[Object.keys(currentShows).length + 1] = finishedShowObject;
+    delete finishedShows[index];
+    saveCookies();
+    window.location = 'index.html';
 }
 
 function LoginOrSignup(loginOrsignUp) {
@@ -135,8 +141,14 @@ function makeListActive(listIndex){
             break;
         }
     }
+    showInfoContainer.innerHTML = '';
     if (isFinishedShow === true){
-        showInfoContainer.innerHTML = `<button onclick="renewShow(${listIndex})">Renew This Show</button>`;
+        for (i = 1; i < Object.keys(finishedShows).length + 1; i++) {
+            if (finishedShows[i].showName === activeListName) {
+                showInfoContainer.innerHTML = `<button onclick="renewShow(${i})">Renew This Show</button>`;
+                break;
+            }
+        }
     }else {
         showInfoContainer.innerHTML = '';
     }
@@ -146,13 +158,19 @@ function makeListActive(listIndex){
     });
 }
 
+function checkNameAvailability(name) {
+
+}
+
 function saveCookies() {
     localStorage.setItem('currentShows', JSON.stringify(currentShows));
     localStorage.setItem('showWatchHistory', JSON.stringify(showWatchHistory));
+    localStorage.setItem('finishedShows', JSON.stringify(finishedShows));
 }
 
 function deleteAll() {
     localStorage.removeItem('currentShows');
     localStorage.removeItem('showWatchHistory');
+    localStorage.removeItem('finishedShows');
     location.reload();
 }
