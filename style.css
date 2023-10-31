@@ -163,6 +163,35 @@ button{
     border: 3px solid rgb(155, 100, 210);
 }
 
+.dropdown {
+    display: inline-block;
+    position: relative;
+    cursor: pointer;
+}
+#js-dropdown-text{
+    border: 1px solid #ccc;
+    padding: 3px 8px;
+    border-radius: 5px;
+}
+.dropdown-select {
+    display: none;
+    position: absolute;
+    min-width: 100px;
+    background-color: #171717;
+}
+.dropdown:hover .dropdown-select {
+    display: block;
+}
+.dropdown-select-option {
+    padding: 10px;
+    text-decoration: none;
+    display: block;
+    color: white;
+}
+.dropdown-select-option:hover{
+    background-color: #4d4c4c;
+}
+
 #js-history-container{
     display: flex;
 }
@@ -178,13 +207,41 @@ button{
     list-style: none;
     font-size: 2em;
     word-wrap: break-word;
-    padding-top: 15px;
+    padding-top: 20px;
     cursor: pointer;
     color: rgb(226, 117, 114);
 }
 #js-current-show-info{
     flex: 85%;
     border: 2px groove white;
-    padding: 15px;
+    padding-left: 10px;
     overflow-y: auto;
+    height: 85vh;
+    text-align: center;
+}
+#js-current-show-info div{
+    display: flex;
+}
+#js-current-show-info p{
+    text-align: left;
+}
+#js-current-show-info button{
+    margin-top: 10px;
+    cursor: pointer;
+    padding: 5px 10px;
+    color: white;
+    background-color: #171717;
+    border: 3px solid rgb(250, 1, 250);
+    border-radius: 5px;
+    font-size: 1.2em;
+}
+#js-current-show-info button:hover{
+    border-color:rgb(247, 87, 247);
+}
+
+.trash-can{
+    cursor: pointer;
+    margin-top: 17px;
+    margin-left: 5px;
+    color: rgb(148, 145, 145);
 }

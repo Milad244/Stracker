@@ -145,21 +145,28 @@ function makeListActive(listIndex){
     if (isFinishedShow === true){
         for (i = 1; i < Object.keys(finishedShows).length + 1; i++) {
             if (finishedShows[i].showName === activeListName) {
-                showInfoContainer.innerHTML = `<button onclick="renewShow(${i})">Renew This Show</button>`;
+                showInfoContainer.innerHTML += `<button onclick="renewShow(${i})">Renew This Show</button>`;
                 break;
             }
         }
-    }else {
-        showInfoContainer.innerHTML = '';
     }
     Object.keys(showInfoObject).forEach(function(value, index){
         const currentLog = showInfoObject[index + 1];
-        showInfoContainer.innerHTML += `<p>| Log: ${value} | Show Name: ${currentLog.showName} | Date Watched: ${currentLog.date} Season: ${currentLog.season} | Episode: ${currentLog.episode} |</p>`;
+        showInfoContainer.innerHTML += `<div><p>| Log: ${value} | Show Name: ${currentLog.showName} | Date Watched: ${currentLog.date} Season: ${currentLog.season} | Episode: ${currentLog.episode} |</p>
+        <i onclick="deleteLog('${currentLog.showName, value}');" class="fa-solid fa-trash fa-l trash-can"></i></div>`;
     });
 }
 
 function checkNameAvailability(name) {
 
+}
+
+function deleteShow(index){
+
+}
+
+function deleteLog(showName, index){
+    
 }
 
 function saveCookies() {
