@@ -157,6 +157,26 @@ function makeListActive(listIndex){
     });
 }
 
+function changeTimePeriod(newElementValue, timeVariable, timePeriod){
+    if (timeVariable === 'days'){
+        calcLastTimePeriodResults();
+    } else if (timeVariable === 'years') {
+        calcLastTimePeriodResults();
+    }
+    const timePeriodElement = document.querySelector('#js-time-period-dropdown-text');
+    timePeriodElement.innerHTML = newElementValue;
+    const dropdownElement = document.querySelector('.dropdown-select');
+    dropdownElement.setAttribute('style', 'pointer-events: none');
+    setTimeout(() => {
+        dropdownElement.setAttribute('style', 'pointer-events: all');
+    }, 1);
+    
+}
+
+function calcLastTimePeriodResults(){
+
+}
+
 function checkNameAvailability(name) {
 
 }
