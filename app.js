@@ -152,9 +152,9 @@ function makeListActive(listIndex){
     }
     Object.keys(showInfoObject).forEach(function(value, index){
         const currentLog = showInfoObject[index + 1];
-        showInfoContainer.innerHTML += `<div><p>| Log: ${value} | Show Name: ${currentLog.showName} | Date Watched: ${currentLog.date} Season: ${currentLog.season} | Episode: ${currentLog.episode} |</p>
-        <i onclick="deleteLog('${currentLog.showName, value}');" class="fa-solid fa-trash fa-l trash-can"></i></div>`;
+        showInfoContainer.innerHTML += `<div><p>| Log: ${value} | Show Name: ${currentLog.showName} | Date Watched: ${currentLog.date} Season: ${currentLog.season} | Episode: ${currentLog.episode} |</p></div>`;
     });
+    //<i onclick="deleteLog('${currentLog.showName, value}');" class="fa-solid fa-trash fa-l trash-can"></i>
 }
 
 function changeTimePeriod(newElementValue, timeVariable, timePeriod){
