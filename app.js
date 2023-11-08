@@ -20,16 +20,21 @@ function enterStart(func, event, parameter){
 
 function addNewShow() {
     const newShow = document.querySelector('#js-new-show-input');
-    currentShows[Object.keys(currentShows).length + 1] = {
-        showName: newShow.value,
-        season: 1,
-        episode: 0,
-        liveSeason: 1,
-        liveEpisode: 1
-    };
-    showWatchHistory[newShow.value] = {};
-    saveCookies();
-    Load('index');
+    const availableArr = checkNameAvailability(newShow.value);
+    if (availableArr[0] === true){
+        currentShows[Object.keys(currentShows).length + 1] = {
+            showName: newShow.value,
+            season: 1,
+            episode: 0,
+            liveSeason: 1,
+            liveEpisode: 1
+        };
+        showWatchHistory[newShow.value] = {};
+        saveCookies();
+        Load('index');
+    } else{
+        alert(`Error 1\nThe name you typed is invalid because it is ${availableArr[1]}`);
+    }
     newShow.value = '';
 }
 
@@ -178,7 +183,20 @@ function calcLastTimePeriodResults(){
 }
 
 function checkNameAvailability(name) {
-
+    let isNameAvailable = true
+    let reason;
+    if (!name.replace(/\s/g, '').length) {
+        reason = 'empty';
+        isNameAvailable = false
+    }
+    Object.keys(showWatchHistory).forEach(function(value, index){
+        if (name.toLowerCase() === value.toLowerCase()){
+            reason = 'a duplicate';
+            isNameAvailable = false;
+        }
+    })
+    returnArray = [isNameAvailable, reason];
+    return returnArray;
 }
 
 function deleteShow(index){
