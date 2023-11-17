@@ -64,6 +64,7 @@ function Load(page){
             showListContainer.innerHTML += `<div><li onclick="makeListActive('${index}')">${value}</li></div>`;
         });
         makeListActive(0);
+        changeTimePeriod('30 days', 'days', 30);
     }
 }
 
@@ -163,11 +164,7 @@ function makeListActive(listIndex){
 }
 
 function changeTimePeriod(newElementValue, timeVariable, timePeriod){
-    if (timeVariable === 'days'){
-        calcLastTimePeriodResults();
-    } else if (timeVariable === 'years') {
-        calcLastTimePeriodResults();
-    }
+    calcLastTimePeriodResults(timeVariable, timePeriod);
     const timePeriodElement = document.querySelector('#js-time-period-dropdown-text');
     timePeriodElement.innerHTML = newElementValue;
     const dropdownElement = document.querySelector('.dropdown-select');
@@ -175,11 +172,53 @@ function changeTimePeriod(newElementValue, timeVariable, timePeriod){
     setTimeout(() => {
         dropdownElement.setAttribute('style', 'pointer-events: all');
     }, 1);
-    
 }
 
-function calcLastTimePeriodResults(){
+function calcLastTimePeriodResults(timeVariable, timePeriod){
+    let amountOfShows = 0;
+    let amountOfEpisodes = 0;
+    let showsArray = [];
+    if (timeVariable === 'years') {
+        timePeriod *= 365;
+    }
+    let furthestDate = new Date();
+    const Calcdate = furthestDate.getTime() - (timePeriod * 24 * 60 * 60 * 1000);
+    furthestDate.setTime(Calcdate);
+    let furthestYearDate = furthestDate.toJSON().slice(0, 10);
+    //timePeriod = 1;
+    for (i = 0; i<timePeriod; i++) {
+        const Calcdate = furthestDate.getTime() + (1 * 24 * 60 * 60 * 1000);
+        furthestDate.setTime(Calcdate);
+        furthestYearDate = furthestDate.toJSON().slice(0, 10);
+        const currentDateCalcedArr = calcAmountOfShowsAndEpisodes(furthestYearDate, showsArray);
+        amountOfShows += currentDateCalcedArr[0];
+        amountOfEpisodes += currentDateCalcedArr[1];
+        showsArray = currentDateCalcedArr[2];
+    }
+    const amountOfShowsObject = document.querySelector('#js-show-amount');
+    const amountOfEpisodesObject = document.querySelector('#js-episode-amount');
+    amountOfShowsObject.innerHTML = amountOfShows;
+    amountOfEpisodesObject.innerHTML = amountOfEpisodes;
+}
 
+function calcAmountOfShowsAndEpisodes (furthestYearDate, showsArray){
+    let amountOfEpisodes = 0;
+    let amountOfShows = 0;
+    Object.keys(showWatchHistory).forEach(function(value, index){
+        const currentShowName = value;
+        Object.keys(showWatchHistory[currentShowName]).forEach(function(value, index){
+            const currentLog = value
+            const showLogObject = showWatchHistory[currentShowName][currentLog];
+            if (showLogObject.date === furthestYearDate){
+                amountOfEpisodes += 1;
+                if (!showsArray.includes(currentShowName)) {
+                    showsArray.push(currentShowName);
+                    amountOfShows += 1;
+                }
+            }
+        })
+    })
+    return [amountOfShows, amountOfEpisodes, showsArray];
 }
 
 function checkNameAvailability(name) {
