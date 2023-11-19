@@ -11,6 +11,9 @@ button{
 .no-display{
     display: none;
 }
+.hidden{
+    visibility: hidden;
+}
 
 #select-nav-container{
     text-align: center;
