@@ -12,6 +12,20 @@ const showWatchHistory = JSON.parse(localStorage.getItem('showWatchHistory')) ||
 
 const finishedShows = JSON.parse(localStorage.getItem('finishedShows')) || {};
 
+const deletedShows = JSON.parse(localStorage.getItem('deletedShows')) || {};
+
+if (JSON.parse(localStorage.getItem('backup-1.0')) === null) {
+    const allCookies = {
+        currentShows,
+        showWatchHistory,
+        finishedShows,
+        deletedShows
+    }
+    localStorage.setItem('backup-1.0', JSON.stringify(allCookies));
+} else {
+    console.log(JSON.parse(localStorage.getItem('backup-1.0')));
+}
+
 function enterStart(func, event, parameter){ 
     if (event.key === 'Enter') {
         func(parameter);
@@ -19,7 +33,7 @@ function enterStart(func, event, parameter){
 }
 
 function addNewShow() {
-    const newShow = document.querySelector('#js-new-show-input');
+    const newShow = document.getElementById('js-new-show-input');
     const availableArr = checkNameAvailability(newShow.value);
     if (availableArr[0] === true){
         currentShows[newShow.value] = {
@@ -29,7 +43,9 @@ function addNewShow() {
             liveSeason: 1,
             liveEpisode: 1
         };
-        showWatchHistory[newShow.value] = {};
+        showWatchHistory[newShow.value] = {
+            Logs: []
+        };
         saveCookies();
         Load('index');
     } else{
@@ -41,7 +57,7 @@ function addNewShow() {
 let pageDate = new Date().toJSON().slice(0, 10);
 function Load(page){
     if (page === 'index') {
-        const showsList = document.querySelector('#js-shows-container');
+        const showsList = document.getElementById('js-shows-container');
         showsList.innerHTML = '';
         Object.keys(currentShows).forEach(function(value, index){
             const showObject = currentShows[value];
@@ -58,18 +74,28 @@ function Load(page){
             <button id="finished-show-button" onclick="finishedShow('ShowName-${index}')">Finished This Show</button><div>`
         });
     } else if(page === 'watch-history') {
-        const showListContainer = document.querySelector('#js-show-list-container');
+        const showListContainer = document.getElementById('js-show-list-container');
         showListContainer.innerHTML = '';
         Object.keys(showWatchHistory).forEach(function(value, index){
-            showListContainer.innerHTML += `<div><li onclick="makeListActive('${index}')">${value}</li></div>`;
+            showListContainer.innerHTML += `<div style="padding-top: 20px;"><li onclick="makeListActive('${index}')">${value}</li></div>`;
         });
         makeListActive(0);
         changeTimePeriod('30 days', 'days', 30);
     }
 }
 
+function editMode() {
+    const showListContainer = document.getElementById('js-show-list-container');
+    showListContainer.innerHTML = '';
+    Object.keys(showWatchHistory).forEach(function(value, index){
+        showListContainer.innerHTML += `<div class="title-flex-container"><div class="text-container"><li id="ShowName1-${index}" onclick="makeListActive('${index}', 'editMode')">${value}</li></div>
+        <div class="trash-can-container"><i class="fa-solid fa-circle-minus removeButton" onclick="deleteShow('ShowName1-${index}')"></i></div></div>`;
+    });
+    makeListActive(0, 'editMode');
+}
+
 function changeShowNum(showNameID, seasonOrEpisode, amount) {
-    const showName = document.querySelector('#' + showNameID).innerHTML;
+    const showName = document.getElementById(showNameID).innerHTML;
     const showObject = currentShows[showName];
     if (seasonOrEpisode === 'season') {
         showObject.liveSeason += amount;
@@ -83,25 +109,25 @@ function changeShowNum(showNameID, seasonOrEpisode, amount) {
 }
 
 function updateShow(showNameID, season, episode, dateID) {
-    const showName = document.querySelector('#' + showNameID).innerHTML;
+    const showName = document.getElementById(showNameID).innerHTML;
     const showObject = currentShows[showName];
     showObject.season = season;
     showObject.episode = episode;
     showObject.liveEpisode ++;
     
-    showWatchHistory[showObject.showName][Object.keys(showWatchHistory[showObject.showName]).length + 1] = {
+    showWatchHistory[showObject.showName]['Logs'].push ({
         showName: showObject.showName,
-        date: document.querySelector('#'+ dateID).value,
+        date: document.getElementById(dateID).value,
         season: season,
         episode: episode
-    }
-    pageDate = document.querySelector('#'+ dateID).value;
+    })
+    pageDate = document.getElementById(dateID).value;
     saveCookies();
     Load('index');
 }
 
 function finishedShow(showNameID){
-    const showName = document.querySelector('#' + showNameID).innerHTML;
+    const showName = document.getElementById(showNameID).innerHTML;
     finishedShows[showName] = currentShows[showName];
     delete currentShows[showName];
     saveCookies();
@@ -109,7 +135,7 @@ function finishedShow(showNameID){
 }
 
 function renewShow(showNameID){
-    const showName = document.querySelector('#' + showNameID).innerHTML;
+    const showName = document.getElementById(showNameID).innerHTML;
     currentShows[showName] = finishedShows[showName];
     delete finishedShows[showName];
     saveCookies();
@@ -117,8 +143,8 @@ function renewShow(showNameID){
 }
 
 function LoginOrSignup(loginOrsignUp) {
-    const loginElement = document.querySelector('#js-login-container');
-    const signUpElement = document.querySelector('#js-signUp-container');
+    const loginElement = document.getElementById('js-login-container');
+    const signUpElement = document.getElementById('js-signUp-container');
     const divElement = document.getElementsByTagName('div');
     for (i = 0; i < divElement.length; i++){
         divElement[i].setAttribute('style', 'opacity: 20%; pointer-events: none')
@@ -138,8 +164,24 @@ function LoginOrSignup(loginOrsignUp) {
     }
 }
 
-function makeListActive(listIndex){
-    const showInfoContainer = document.querySelector('#js-current-show-info');
+function LoginAttempt(){
+    username = document.getElementById('js-username-input').value;
+    password = document.getElementById('js-password-input').value;
+}
+
+function SignUpAttempt(){
+    newUsername = document.getElementById('js-new-username-input').value;
+    newPassword = document.getElementById('js-new-password-input').value;
+}
+
+function makeListActive(listIndex, Mode){
+    if (Mode === 'editMode') {
+        normalButtonsContainer = document.getElementById('js-normal-buttons-container');
+        editButtonsContainer = document.getElementById('js-edit-buttons-container');
+        normalButtonsContainer.classList.add('no-display');
+        editButtonsContainer.classList.remove('no-display');
+    }
+    const showInfoContainer = document.getElementById('js-current-show-info');
     const activeListName = Object.keys(showWatchHistory)[parseInt(listIndex)]
     const showInfoObject = showWatchHistory[activeListName];
     let isFinishedShow = true;
@@ -160,15 +202,23 @@ function makeListActive(listIndex){
             }
         }
     }
-    Object.keys(showInfoObject).forEach(function(value, index){
-        const currentLog = showInfoObject[index + 1];
-        showInfoContainer.innerHTML += `<div id="ShowInfo-${index}"><p>| Log: ${value} | Show Name: ${currentLog.showName} | Date Watched: ${currentLog.date} Season: ${currentLog.season} | Episode: ${currentLog.episode} |</p></div>`;
+    showInfoObject['Logs'].forEach(function(value, index){
+        const currentLog = showInfoObject['Logs'][index];
+        if (Mode === undefined) {
+            showInfoContainer.innerHTML += `<div><p>| Log: ${index + 1} | Show Name: ${currentLog.showName} | Date Watched: ${currentLog.date} Season: ${currentLog.season} | Episode: ${currentLog.episode} |</p></div>`;
+        }else {
+            showInfoContainer.innerHTML += `<div class="logs-flex-container"><div class="text-container"><p>| Log: ${index + 1} | Show Name: ${currentLog.showName} | Date Watched: ${currentLog.date} Season: ${currentLog.season} | Episode: ${currentLog.episode} |</p></div>
+            <div class="trash-can-container"><i onclick="deleteLog('ShowName-${index}', 'ShowLogIndex-${index}', 'ActiveShowIndex-${index}');" class="fa-solid fa-circle-minus removeButton"></i></div></div>
+            <p id="ShowName-${index}" class='hidden'>${currentLog.showName}</p>
+            <p id="ShowLogIndex-${index}" class='hidden'>${index}</p>
+            <p id="ActiveShowIndex-${index}" class='hidden'>${listIndex}</p>`;
+        }
     });
 }
 
 function changeTimePeriod(newElementValue, timeVariable, timePeriod){
     calcLastTimePeriodResults(timeVariable, timePeriod);
-    const timePeriodElement = document.querySelector('#js-time-period-dropdown-text');
+    const timePeriodElement = document.getElementById('js-time-period-dropdown-text');
     timePeriodElement.innerHTML = newElementValue;
     const dropdownElement = document.querySelector('.dropdown-select');
     dropdownElement.setAttribute('style', 'pointer-events: none');
@@ -188,7 +238,6 @@ function calcLastTimePeriodResults(timeVariable, timePeriod){
     const Calcdate = furthestDate.getTime() - (timePeriod * 24 * 60 * 60 * 1000);
     furthestDate.setTime(Calcdate);
     let furthestYearDate = furthestDate.toJSON().slice(0, 10);
-    //timePeriod = 1;
     for (i = 0; i<timePeriod; i++) {
         const Calcdate = furthestDate.getTime() + (1 * 24 * 60 * 60 * 1000);
         furthestDate.setTime(Calcdate);
@@ -198,8 +247,8 @@ function calcLastTimePeriodResults(timeVariable, timePeriod){
         amountOfEpisodes += currentDateCalcedArr[1];
         showsArray = currentDateCalcedArr[2];
     }
-    const amountOfShowsObject = document.querySelector('#js-show-amount');
-    const amountOfEpisodesObject = document.querySelector('#js-episode-amount');
+    const amountOfShowsObject = document.getElementById('js-show-amount');
+    const amountOfEpisodesObject = document.getElementById('js-episode-amount');
     amountOfShowsObject.innerHTML = amountOfShows;
     amountOfEpisodesObject.innerHTML = amountOfEpisodes;
 }
@@ -209,9 +258,10 @@ function calcAmountOfShowsAndEpisodes (furthestYearDate, showsArray){
     let amountOfShows = 0;
     Object.keys(showWatchHistory).forEach(function(value, index){
         const currentShowName = value;
-        Object.keys(showWatchHistory[currentShowName]).forEach(function(value, index){
-            const currentLog = value
-            const showLogObject = showWatchHistory[currentShowName][currentLog];
+        showWatchHistory[currentShowName]['Logs'].forEach(function(value, index){
+            //const currentLog = value;
+            //const showLogObject = showWatchHistory[currentShowName][currentLog];
+            const showLogObject = value;
             if (showLogObject.date === furthestYearDate){
                 amountOfEpisodes += 1;
                 if (!showsArray.includes(currentShowName)) {
@@ -241,25 +291,61 @@ function checkNameAvailability(name) {
     return returnArray;
 }
 
-function deleteShow(index){
-
+function deleteShow(ShowName1ID){
+    const showName = document.getElementById(ShowName1ID).innerHTML;
+    deletedShows[showName] = showWatchHistory[showName];
+    delete showWatchHistory[showName];
+    delete currentShows[showName];
+    delete finishedShows[showName];
+    console.log(showWatchHistory);
+    console.log(deletedShows);
+    console.log(currentShows);
+    console.log(finishedShows);
+    editMode();
 }
 
-function deleteLog(showName, index){
-    
+function deleteLog(ShowNameID, ShowLogIndexID, ActiveShowID){
+    const showName = document.getElementById(ShowNameID).innerHTML;
+    const showIndex = document.getElementById(ShowLogIndexID).innerHTML;
+    showWatchHistory[showName]['Logs'].splice(showIndex, 1);
+    const activeShowIndex = document.getElementById(ActiveShowID).innerHTML;
+    makeListActive(activeShowIndex, 'editMode');
 }
 
 function saveCookies() {
     localStorage.setItem('currentShows', JSON.stringify(currentShows));
     localStorage.setItem('showWatchHistory', JSON.stringify(showWatchHistory));
     localStorage.setItem('finishedShows', JSON.stringify(finishedShows));
+    localStorage.setItem('deletedShows', JSON.stringify(deletedShows));
 }
 
 function deleteAll() {
-    localStorage.removeItem('currentShows');
-    localStorage.removeItem('showWatchHistory');
-    localStorage.removeItem('finishedShows');
-    location.reload();
+    //localStorage.removeItem('currentShows');
+    //localStorage.removeItem('showWatchHistory');
+    //localStorage.removeItem('finishedShows');
+    //location.reload();
 }
+
+function changeStuff(){
+    Object.keys(showWatchHistory).forEach(function(value, index){
+        if (value != 'New pog'){
+            //addLog(showWatchHistory[value]);
+            showName = value;
+            Object.keys(showWatchHistory[showName]).forEach(function(value, index){
+                currentLog = showWatchHistory[showName][value]
+                if (!Array.isArray(currentLog)){
+                    //showWatchHistory[showName]['Logs'].push (currentLog);
+                    //delete showWatchHistory[showName][value];
+                }
+            })
+        }
+    })
+    //console.log(showWatchHistory);
+    //saveCookies();
+}
+function addLog(object){
+    object['Logs'] = [];
+}
+//changeStuff();
 
 

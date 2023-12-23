@@ -10,11 +10,10 @@
         <div id="select-nav-container">
             <h1>Your current shows</h1>
             <a href="watch-history.html"><button class="corner-button top-left">Your Watch History</button></a>
-            <button class="corner-button top-right" id="js-login-button" onclick="LoginOrSignup('Login');">Login/SignUp</button>
+            <button class="corner-button top-right no-display" id="js-login-button" onclick="LoginOrSignup('Login');">Login/SignUp</button>
             <div>
                 <input id="js-new-show-input" placeholder="Example: Breaking Bad" onkeypress="enterStart(addNewShow, event);">
                 <button onclick="addNewShow();">Add</button>
-                <button onclick="deleteAll()">Delete All</button>
             </div>
         </div>
     </nav>
@@ -24,14 +23,14 @@
             <h1>Login</h1>
             <input id="js-username-input" placeholder="Username"><br>
             <input id="js-password-input" placeholder="Password"><br>
-            <input type="submit" value="Login"><br>
+            <input onclick="LoginAttempt();" type="submit" value="Login"><br>
             <p onclick="LoginOrSignup('SignUp');">No account? Click to sign up</p>
         </div>
         <div class="no-display" id="js-signUp-container">
             <h1>Sign Up</h1>
             <input id="js-new-username-input" placeholder="Username"><br>
             <input id="js-new-password-input" placeholder="Password"><br>
-            <input type="submit" value="Sign Up"><br>
+            <input onclick="SignUpAttempt();" type="submit" value="Sign Up"><br>
             <p onclick="LoginOrSignup('Login');">Already have an account? Click to login</p>
         </div>
 

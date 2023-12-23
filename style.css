@@ -13,6 +13,7 @@ button{
 }
 .hidden{
     visibility: hidden;
+    position: absolute;
 }
 
 #select-nav-container{
@@ -201,6 +202,7 @@ button{
 #js-show-list-container{
     flex: 15%;
     max-width: 200px;
+    min-width: 130px;
     height: 85vh;
     text-align: center;
     border: 2px groove white;
@@ -210,9 +212,25 @@ button{
     list-style: none;
     font-size: 2em;
     word-wrap: break-word;
-    padding-top: 20px;
     cursor: pointer;
     color: rgb(226, 117, 114);
+}
+.title-flex-container{
+    display: flex;
+    align-items: center;
+    padding-top: 20px;
+    justify-content: center;
+}
+.logs-flex-container{
+    display: flex;
+    align-items: center;
+}
+.title-flex-container .text-container{
+    width: 75%;
+    min-width: 100px;
+}
+.trash-can-container{
+    padding-left: 5px;
 }
 #js-current-show-info{
     flex: 85%;
@@ -247,4 +265,9 @@ button{
     margin-top: 17px;
     margin-left: 5px;
     color: rgb(148, 145, 145);
+}
+.removeButton{
+    color: rgb(189, 4, 4);
+    font-size: 1.3em;
+    cursor: pointer;
 }
