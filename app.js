@@ -329,19 +329,19 @@ function deleteAll() {
 function changeStuff(){
     Object.keys(showWatchHistory).forEach(function(value, index){
         if (value != 'New pog'){
-            //addLog(showWatchHistory[value]);
+            addLog(showWatchHistory[value]);
             showName = value;
             Object.keys(showWatchHistory[showName]).forEach(function(value, index){
                 currentLog = showWatchHistory[showName][value]
                 if (!Array.isArray(currentLog)){
-                    //showWatchHistory[showName]['Logs'].push (currentLog);
-                    //delete showWatchHistory[showName][value];
+                    showWatchHistory[showName]['Logs'].push (currentLog);
+                    delete showWatchHistory[showName][value];
                 }
             })
         }
     })
-    //console.log(showWatchHistory);
-    //saveCookies();
+    console.log(showWatchHistory);
+    saveCookies();
 }
 function addLog(object){
     object['Logs'] = [];
