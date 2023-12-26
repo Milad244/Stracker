@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<head>
+    <title>Stracker</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="app.js"></script>
+    <script src="https://kit.fontawesome.com/a2b54467f5.js" crossorigin="anonymous"></script>
+</head>
+<body>
+    <nav id="select-nav">
+        <div id="select-nav-container">
+            <h1>Settings</h1>
+            <a href="index.html"><button class="corner-button top-left">Back</button></a>
+        </div>
+    </nav>
+
+    <main>
+        <div id="js-setting-buttons-container">
+            <button id="js-download-data-button" onclick="downloadData()">Download User Data</button>
+            <button id="js-upload-data-button" onclick="uploadData()">Upload User Data</button>
+            <button id="js-restore-deleted-show-button" onclick="restoreDeletedShow()">Restore deleted shows</button>
+            <a href="stats.html"><button>Your Statistics</button></a>
+            <button id="js-write-review-button" onclick="writeReview()">Write a review</button>
+            <button class="important-button" id="js-delete-account-button" onclick="deleteAccount()">Delete account</button>
+        </div>
+    </main>
+</body>
+</html>

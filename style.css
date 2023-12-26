@@ -21,6 +21,8 @@ button{
 }
 #select-nav-container h1{
     font-size: 2em;
+    margin-top: 20px;
+    font-size: 3em;
 }
 
 #js-new-show-input{
@@ -203,7 +205,7 @@ button{
     flex: 15%;
     max-width: 200px;
     min-width: 130px;
-    height: 85vh;
+    height: 83vh;
     text-align: center;
     border: 2px groove white;
     overflow-y: auto;
@@ -237,7 +239,7 @@ button{
     border: 2px groove white;
     padding-left: 10px;
     overflow-y: auto;
-    height: 85vh;
+    height: 83vh;
     text-align: center;
 }
 #js-current-show-info div{
@@ -270,4 +272,33 @@ button{
     color: rgb(189, 4, 4);
     font-size: 1.3em;
     cursor: pointer;
+}
+
+#js-setting-buttons-container{
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 10%;
+    margin-top: 30px;
+}
+
+#js-setting-buttons-container button{
+    margin-top: 50px;
+    cursor: pointer;
+    padding: 10px 10px;
+    font-size: 2em;
+    color: white;
+    background-color: #171717;
+    border: 3px solid rgb(230, 114, 48);
+    border-radius: 10px;
+    min-width: 400px;
+}
+#js-setting-buttons-container button:hover{
+    border: 3px solid rgb(223, 140, 93);
+}
+.important-button {
+    border: 3px solid rgb(255, 0, 0) !important;
+}
+.important-button:hover{
+    border: 3px solid rgb(216, 0, 0) !important;
 }

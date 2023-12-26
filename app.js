@@ -14,16 +14,16 @@ const finishedShows = JSON.parse(localStorage.getItem('finishedShows')) || {};
 
 const deletedShows = JSON.parse(localStorage.getItem('deletedShows')) || {};
 
-if (JSON.parse(localStorage.getItem('backup-1.0')) === null) {
+if (JSON.parse(localStorage.getItem('backup-1.1')) === null) {
     const allCookies = {
         currentShows,
         showWatchHistory,
         finishedShows,
         deletedShows
     }
-    localStorage.setItem('backup-1.0', JSON.stringify(allCookies));
+    localStorage.setItem('backup-1.1', JSON.stringify(allCookies));
 } else {
-    console.log(JSON.parse(localStorage.getItem('backup-1.0')));
+    //console.log(JSON.parse(localStorage.getItem('backup-1.1')));
 }
 
 function enterStart(func, event, parameter){ 
@@ -287,6 +287,12 @@ function checkNameAvailability(name) {
             isNameAvailable = false;
         }
     })
+    Object.keys(deletedShows).forEach(function(value, index){
+        if (name.toLowerCase() === value.toLowerCase()){
+            reason = 'a duplicate';
+            isNameAvailable = false;
+        }
+    })
     returnArray = [isNameAvailable, reason];
     return returnArray;
 }
@@ -297,10 +303,6 @@ function deleteShow(ShowName1ID){
     delete showWatchHistory[showName];
     delete currentShows[showName];
     delete finishedShows[showName];
-    console.log(showWatchHistory);
-    console.log(deletedShows);
-    console.log(currentShows);
-    console.log(finishedShows);
     editMode();
 }
 
@@ -348,4 +350,21 @@ function addLog(object){
 }
 //changeStuff();
 
+const allData = {
+    currentShows,
+    showWatchHistory,
+    finishedShows,
+    deletedShows
+}
+
+function downloadData (){
+    const allDataJSON = JSON.stringify(allData);
+    const blob = new Blob([allDataJSON], { type: 'application/json' });
+    const downloadLink = document.createElement('a');
+    downloadLink.href = URL.createObjectURL(blob);
+    downloadLink.download = 'userdata.json';
+    document.body.appendChild(downloadLink);
+    downloadLink.click();
+    document.body.removeChild(downloadLink);
+}
 
