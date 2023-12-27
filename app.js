@@ -358,11 +358,12 @@ const allData = {
 }
 
 function downloadData (){
+    const currentDate = new Date().toJSON().slice(0, 10);
     const allDataJSON = JSON.stringify(allData);
     const blob = new Blob([allDataJSON], { type: 'application/json' });
     const downloadLink = document.createElement('a');
     downloadLink.href = URL.createObjectURL(blob);
-    downloadLink.download = 'userdata.json';
+    downloadLink.download = `Stracker-data-${currentDate}.json`;
     document.body.appendChild(downloadLink);
     downloadLink.click();
     document.body.removeChild(downloadLink);
