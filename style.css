@@ -302,3 +302,37 @@ button{
 .important-button:hover{
     border: 3px solid rgb(216, 0, 0) !important;
 }
+
+#js-delete-account-prereq{
+    text-align: center;
+    font-size: 1.2em;
+    border: 3px solid rgb(131, 2, 2);
+    border-radius: 5px;
+    width: 60%;
+    max-width: 500px;
+    min-width: 400px;
+    height: 175px;
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%,-50%);
+    margin:auto;
+    opacity: 100%;
+    vertical-align: middle;
+}
+#js-delete-account-prereq button{
+    cursor: pointer;
+    padding: 10px 10px;
+    font-size: 1.1em;
+    color: white;
+    background-color: #171717;
+    border: 3px solid rgb(25, 52, 170);
+    border-radius: 5px;
+}
+#js-delete-account-prereq button:hover{
+    border-color: rgb(23, 45, 145);
+}
+#js-confirm-delete-account{
+    margin-left: 15px;
+}
+

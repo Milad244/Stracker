@@ -6,6 +6,7 @@
     <script src="https://kit.fontawesome.com/a2b54467f5.js" crossorigin="anonymous"></script>
 </head>
 <body>
+    <p class="no-display" id="js-current-file">settings</p>
     <nav id="select-nav">
         <div id="select-nav-container">
             <h1>Settings</h1>
@@ -20,7 +21,13 @@
             <button id="js-restore-deleted-show-button" onclick="restoreDeletedShow()">Restore deleted shows</button>
             <a href="stats.html"><button>Your Statistics</button></a>
             <button id="js-write-review-button" onclick="writeReview()">Write a review</button>
-            <button class="important-button" id="js-delete-account-button" onclick="deleteAccount()">Delete account</button>
+            <button class="important-button" id="js-delete-account-button" onclick="deleteAccountPrereq('start')">Delete account</button>
+        </div>
+
+        <div class="no-display" id="js-delete-account-prereq">
+            <p><span class="important-paragraph">WARNING</span><br>This will permanently delete your account<br>Are you sure you want to proceed?</p>
+            <button onclick="deleteAccountPrereq('cancel')">Cancel</button>
+            <button id="js-confirm-delete-account" onclick="deleteAccountPrereq('confirm')">Confirm</button>
         </div>
     </main>
 </body>

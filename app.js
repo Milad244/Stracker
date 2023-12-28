@@ -1,9 +1,6 @@
 window.onload = function() {
-    if (window.location.pathname.includes("index.html")){
-        Load('index');
-    } else if(window.location.pathname.includes("watch-history.html")) {
-        Load('watch-history');
-    }
+    currentFileName = document.getElementById('js-current-file').innerHTML;
+    Load(currentFileName);
 };
 
 const currentShows = JSON.parse(localStorage.getItem('currentShows')) || {};
@@ -259,8 +256,6 @@ function calcAmountOfShowsAndEpisodes (furthestYearDate, showsArray){
     Object.keys(showWatchHistory).forEach(function(value, index){
         const currentShowName = value;
         showWatchHistory[currentShowName]['Logs'].forEach(function(value, index){
-            //const currentLog = value;
-            //const showLogObject = showWatchHistory[currentShowName][currentLog];
             const showLogObject = value;
             if (showLogObject.date === furthestYearDate){
                 amountOfEpisodes += 1;
@@ -321,34 +316,62 @@ function saveCookies() {
     localStorage.setItem('deletedShows', JSON.stringify(deletedShows));
 }
 
-function deleteAll() {
-    //localStorage.removeItem('currentShows');
-    //localStorage.removeItem('showWatchHistory');
-    //localStorage.removeItem('finishedShows');
-    //location.reload();
+function deleteAccountPrereq(type){
+    const deleteWarningDiv = document.getElementById('js-delete-account-prereq');
+    const confirmDeleteButton = document.getElementById('js-confirm-delete-account');
+    const allDivElements = document.getElementsByTagName('div');
+    if (type === 'start'){
+        for (i = 0; i < allDivElements.length; i++){
+            allDivElements[i].setAttribute('style', 'opacity: 10%; pointer-events: none')
+        }
+        deleteWarningDiv.classList.remove('no-display');
+        deleteWarningDiv.setAttribute('style', 'opacity: 100%; pointer-events: all');
+        confirmDeleteButton.setAttribute('style', 'opacity: 10%; pointer-events: none');
+        confirmDeleteButton.innerHTML = `Confirm (${5})`
+        let baseNum = 4;
+        countdownLoop = setInterval(() => {
+            let currentNum = baseNum;
+            confirmDeleteButton.innerHTML = `Confirm (${baseNum})`
+            currentNum --;
+            baseNum = currentNum;
+            if (baseNum < 0){
+                confirmDeleteButton.innerHTML = 'Confirm'
+                confirmDeleteButton.setAttribute('style', 'opacity: 100%; pointer-events: all');
+                clearInterval(countdownLoop);
+            }
+        }, 1000)
+    } else if (type === 'cancel'){
+        clearInterval(countdownLoop);
+        for (i = 0; i < allDivElements.length; i++){
+            allDivElements[i].setAttribute('style', 'opacity: 100%; pointer-events: all')
+        }
+        confirmDeleteButton.setAttribute('style', 'opacity: 100%; pointer-events: all');
+        deleteWarningDiv.classList.add('no-display');
+    } else if (type === 'confirm'){
+        clearInterval(countdownLoop);
+        for (i = 0; i < allDivElements.length; i++){
+            allDivElements[i].setAttribute('style', 'opacity: 100%; pointer-events: all')
+        }
+        confirmDeleteButton.setAttribute('style', 'opacity: 100%; pointer-events: all');
+        deleteWarningDiv.classList.add('no-display');
+        deleteAccount();
+    }
 }
 
-function changeStuff(){
-    Object.keys(showWatchHistory).forEach(function(value, index){
-        if (value != 'New pog'){
-            addLog(showWatchHistory[value]);
-            showName = value;
-            Object.keys(showWatchHistory[showName]).forEach(function(value, index){
-                currentLog = showWatchHistory[showName][value]
-                if (!Array.isArray(currentLog)){
-                    showWatchHistory[showName]['Logs'].push (currentLog);
-                    delete showWatchHistory[showName][value];
-                }
-            })
-        }
-    })
-    console.log(showWatchHistory);
-    saveCookies();
+function myStopFunction() {
+  clearInterval(myInterval);
 }
-function addLog(object){
-    object['Logs'] = [];
+
+function deleteAccount() {
+    localStorage.removeItem('currentShows');
+    localStorage.removeItem('showWatchHistory');
+    localStorage.removeItem('finishedShows');
+    localStorage.removeItem('deletedShows');
+    ocalStorage.removeItem('backup-1.0');
+    localStorage.removeItem('backup-1.1');
+    window.location = 'index.html';
+    console.log('DELETED');
 }
-//changeStuff();
 
 const allData = {
     currentShows,
