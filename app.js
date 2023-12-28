@@ -367,7 +367,7 @@ function deleteAccount() {
     localStorage.removeItem('showWatchHistory');
     localStorage.removeItem('finishedShows');
     localStorage.removeItem('deletedShows');
-    ocalStorage.removeItem('backup-1.0');
+    localStorage.removeItem('backup-1.0');
     localStorage.removeItem('backup-1.1');
     window.location = 'index.html';
     console.log('DELETED');
