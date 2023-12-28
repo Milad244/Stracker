@@ -73,10 +73,16 @@ function Load(page){
     } else if(page === 'watch-history') {
         const showListContainer = document.getElementById('js-show-list-container');
         showListContainer.innerHTML = '';
-        Object.keys(showWatchHistory).forEach(function(value, index){
-            showListContainer.innerHTML += `<div style="padding-top: 20px;"><li onclick="makeListActive('${index}')">${value}</li></div>`;
-        });
-        makeListActive(0);
+        if (Object.keys(showWatchHistory).length != 0){
+            Object.keys(showWatchHistory).forEach(function(value, index){
+                showListContainer.innerHTML += `<div style="padding-top: 20px;"><li onclick="makeListActive('${index}')">${value}</li></div>`;
+            });
+            makeListActive(0);
+        } else{
+            showListContainer.innerHTML = 'You have no shows on this account. <br>To start seeing your watch history go to the home page and add a new show!';
+            const editButton = document.getElementById('js-watch-history-edit-button');
+            editButton.setAttribute('style', 'opacity: 20%; pointer-events: none');
+        }
         changeTimePeriod('30 days', 'days', 30);
     }
 }
