@@ -16,18 +16,25 @@
 
     <main>
         <div id="js-setting-buttons-container">
-            <button id="js-download-data-button" onclick="downloadData()">Download User Data</button>
-            <button id="js-upload-data-button" onclick="uploadData()">Upload User Data</button>
-            <button id="js-restore-deleted-show-button" onclick="restoreDeletedShow()">Restore deleted shows</button>
+            <button onclick="downloadData()">Download User Data</button>
+            <button onclick="uploadData()">Upload User Data</button>
+            <button onclick="RestoreContainer('open')">Restore deleted shows</button>
             <a href="stats.html"><button>Your Statistics</button></a>
-            <button id="js-write-review-button" onclick="writeReview()">Write a review</button>
-            <button class="important-button" id="js-delete-account-button" onclick="deleteAccountPrereq('start')">Delete account</button>
+            <button onclick="writeReview()">Write a review</button>
+            <button class="important-button" onclick="deleteAccountPrereq('start')">Delete account</button>
         </div>
 
         <div class="no-display" id="js-delete-account-prereq">
             <p><span class="important-paragraph">WARNING</span><br>This will permanently delete your account<br>Are you sure you want to proceed?</p>
             <button onclick="deleteAccountPrereq('cancel')">Cancel</button>
             <button id="js-confirm-delete-account" onclick="deleteAccountPrereq('confirm')">Confirm</button>
+        </div>
+
+        <div class="no-display" id="js-restore-deleted-shows-container">
+            <i class="fa-solid fa-x close-button" onclick="RestoreContainer('close')"></i>
+            <div id="js-deleted-shows-container">
+
+            </div>
         </div>
     </main>
 </body>

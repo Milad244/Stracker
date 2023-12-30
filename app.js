@@ -1,16 +1,14 @@
+//loading html when visiting the website
 window.onload = function() {
     currentFileName = document.getElementById('js-current-file').innerHTML;
     Load(currentFileName);
 };
-
+//general vars
 const currentShows = JSON.parse(localStorage.getItem('currentShows')) || {};
-
 const showWatchHistory = JSON.parse(localStorage.getItem('showWatchHistory')) || {};
-
 const finishedShows = JSON.parse(localStorage.getItem('finishedShows')) || {};
-
 const deletedShows = JSON.parse(localStorage.getItem('deletedShows')) || {};
-
+//backups
 if (JSON.parse(localStorage.getItem('backup-1.1')) === null) {
     const allCookies = {
         currentShows,
@@ -23,12 +21,39 @@ if (JSON.parse(localStorage.getItem('backup-1.1')) === null) {
     //console.log(JSON.parse(localStorage.getItem('backup-1.1')));
 }
 
+//general functions
 function enterStart(func, event, parameter){ 
     if (event.key === 'Enter') {
         func(parameter);
     }
 }
 
+function noDisplayChanges(mode, elements, opacityLevel){
+    if (Array.isArray(elements) === false){
+        elements = [elements];
+    }
+    const divElement = document.getElementsByTagName('div');
+    Object.keys(divElement).forEach(function(value, index){
+        if (mode === 'display'){
+            divElement[index].setAttribute('style', `opacity: ${opacityLevel}%; pointer-events: none`);
+        } else if (mode === 'noDisplay'){
+            divElement[index].setAttribute('style', 'opacity: 100%; pointer-events: all');
+        }
+    });
+    elements.forEach(function(value, index){
+        if (mode === 'display'){
+            elements[index].classList.remove('no-display');
+            elements[index].setAttribute('style', 'opacity: 100%; pointer-events: all');
+        } else if (mode === 'noDisplay'){
+            elements[index].classList.add('no-display');
+        } else if (mode === 'disable'){
+            elements[index].setAttribute('style', `opacity: ${opacityLevel}%; pointer-events: none`);
+        } else if (mode === 'enable'){
+            elements[index].setAttribute('style', 'opacity: 100%; pointer-events: all');
+        }
+    });
+}
+//key functions
 function addNewShow() {
     const newShow = document.getElementById('js-new-show-input');
     const availableArr = checkNameAvailability(newShow.value);
@@ -307,6 +332,16 @@ function deleteShow(ShowName1ID){
     editMode();
 }
 
+function RestoreContainer(state){
+    const restoreContainer = document.getElementById('js-restore-deleted-shows-container');
+    const deletedShowsContainer = document.getElementById('js-deleted-shows-container');
+    if (state === 'open'){
+        noDisplayChanges('display', [restoreContainer, deletedShowsContainer], 15);
+    } else if (state === 'close'){
+        noDisplayChanges('noDisplay', restoreContainer);
+    }
+}
+
 function deleteLog(ShowNameID, ShowLogIndexID, ActiveShowID){
     const showName = document.getElementById(ShowNameID).innerHTML;
     const showIndex = document.getElementById(ShowLogIndexID).innerHTML;
@@ -327,12 +362,8 @@ function deleteAccountPrereq(type){
     const confirmDeleteButton = document.getElementById('js-confirm-delete-account');
     const allDivElements = document.getElementsByTagName('div');
     if (type === 'start'){
-        for (i = 0; i < allDivElements.length; i++){
-            allDivElements[i].setAttribute('style', 'opacity: 10%; pointer-events: none')
-        }
-        deleteWarningDiv.classList.remove('no-display');
-        deleteWarningDiv.setAttribute('style', 'opacity: 100%; pointer-events: all');
-        confirmDeleteButton.setAttribute('style', 'opacity: 10%; pointer-events: none');
+        noDisplayChanges('display', deleteWarningDiv, 10);
+        noDisplayChanges('disable', confirmDeleteButton, 10);
         confirmDeleteButton.innerHTML = `Confirm (${5})`
         let baseNum = 4;
         countdownLoop = setInterval(() => {
@@ -342,24 +373,16 @@ function deleteAccountPrereq(type){
             baseNum = currentNum;
             if (baseNum < 0){
                 confirmDeleteButton.innerHTML = 'Confirm'
-                confirmDeleteButton.setAttribute('style', 'opacity: 100%; pointer-events: all');
+                noDisplayChanges('enable', confirmDeleteButton);
                 clearInterval(countdownLoop);
             }
         }, 1000)
     } else if (type === 'cancel'){
         clearInterval(countdownLoop);
-        for (i = 0; i < allDivElements.length; i++){
-            allDivElements[i].setAttribute('style', 'opacity: 100%; pointer-events: all')
-        }
-        confirmDeleteButton.setAttribute('style', 'opacity: 100%; pointer-events: all');
-        deleteWarningDiv.classList.add('no-display');
+        noDisplayChanges('noDisplay', deleteWarningDiv);
     } else if (type === 'confirm'){
         clearInterval(countdownLoop);
-        for (i = 0; i < allDivElements.length; i++){
-            allDivElements[i].setAttribute('style', 'opacity: 100%; pointer-events: all')
-        }
-        confirmDeleteButton.setAttribute('style', 'opacity: 100%; pointer-events: all');
-        deleteWarningDiv.classList.add('no-display');
+        noDisplayChanges('noDisplay', deleteWarningDiv);
         deleteAccount();
     }
 }
