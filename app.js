@@ -28,7 +28,7 @@ function enterStart(func, event, parameter){
     }
 }
 
-function noDisplayChanges(mode, elements, opacityLevel){
+function DisplayChanges(mode, elements, opacityLevel){
     if (Array.isArray(elements) === false){
         elements = [elements];
     }
@@ -211,7 +211,7 @@ function makeListActive(listIndex, Mode){
     }
     const showInfoContainer = document.getElementById('js-current-show-info');
     const activeListName = Object.keys(showWatchHistory)[parseInt(listIndex)]
-    const showInfoObject = showWatchHistory[activeListName];
+    const activeObject = showWatchHistory[activeListName];
     let isFinishedShow = true;
     for(i = 0; i < Object.keys(currentShows).length; i++){
         const currentShowName = Object.keys(currentShows)[parseInt(i)];
@@ -230,8 +230,8 @@ function makeListActive(listIndex, Mode){
             }
         }
     }
-    showInfoObject['Logs'].forEach(function(value, index){
-        const currentLog = showInfoObject['Logs'][index];
+    activeObject['Logs'].forEach(function(value, index){
+        const currentLog = activeObject['Logs'][index];
         if (Mode === undefined) {
             showInfoContainer.innerHTML += `<div><p>| Log: ${index + 1} | Show Name: ${currentLog.showName} | Date Watched: ${currentLog.date} Season: ${currentLog.season} | Episode: ${currentLog.episode} |</p></div>`;
         }else {
@@ -319,13 +319,17 @@ function checkNameAvailability(name) {
             isNameAvailable = false;
         }
     })
+    if (name.includes('&')){
+        reason = 'containing an invalid character';
+        isNameAvailable = false;
+    }
     returnArray = [isNameAvailable, reason];
     return returnArray;
 }
 
 function deleteShow(ShowName1ID){
     const showName = document.getElementById(ShowName1ID).innerHTML;
-    deletedShows[showName] = showWatchHistory[showName];
+    deletedShows[showName] = [showWatchHistory[showName], currentShows[showName] || finishedShows[showName]];
     delete showWatchHistory[showName];
     delete currentShows[showName];
     delete finishedShows[showName];
@@ -336,10 +340,31 @@ function RestoreContainer(state){
     const restoreContainer = document.getElementById('js-restore-deleted-shows-container');
     const deletedShowsContainer = document.getElementById('js-deleted-shows-container');
     if (state === 'open'){
-        noDisplayChanges('display', [restoreContainer, deletedShowsContainer], 15);
+        DisplayChanges('display', [restoreContainer, deletedShowsContainer], 15);
+        deletedShowsContainer.innerHTML = '';
+        Object.keys(deletedShows).forEach(function(value, index){
+            deletedShowsContainer.innerHTML += `<li onclick="activeDeletedShow('${index}')">${value}</li>`;
+        });
+        activeDeletedShow(0);
     } else if (state === 'close'){
-        noDisplayChanges('noDisplay', restoreContainer);
+        DisplayChanges('noDisplay', restoreContainer);
     }
+}
+
+function activeDeletedShow(listIndex){
+    const restoreButton = document.getElementById('js-restore-button');
+    const activeListName = Object.keys(deletedShows)[parseInt(listIndex)]
+    const activeObject = deletedShows[activeListName];
+    restoreButton.innerHTML = `Restore ${activeListName}`;
+    restoreButton.onclick = function(){restoreDeletedShow(activeListName, activeObject);};
+}
+
+function restoreDeletedShow(showName, showObject){
+    showWatchHistory[showName] = showObject[0];
+    currentShows[showName] = showObject[1];
+    delete deletedShows[showName];
+    saveCookies();
+    RestoreContainer('open');
 }
 
 function deleteLog(ShowNameID, ShowLogIndexID, ActiveShowID){
@@ -362,8 +387,8 @@ function deleteAccountPrereq(type){
     const confirmDeleteButton = document.getElementById('js-confirm-delete-account');
     const allDivElements = document.getElementsByTagName('div');
     if (type === 'start'){
-        noDisplayChanges('display', deleteWarningDiv, 10);
-        noDisplayChanges('disable', confirmDeleteButton, 10);
+        DisplayChanges('display', deleteWarningDiv, 10);
+        DisplayChanges('disable', confirmDeleteButton, 10);
         confirmDeleteButton.innerHTML = `Confirm (${5})`
         let baseNum = 4;
         countdownLoop = setInterval(() => {
@@ -373,22 +398,18 @@ function deleteAccountPrereq(type){
             baseNum = currentNum;
             if (baseNum < 0){
                 confirmDeleteButton.innerHTML = 'Confirm'
-                noDisplayChanges('enable', confirmDeleteButton);
+                DisplayChanges('enable', confirmDeleteButton);
                 clearInterval(countdownLoop);
             }
         }, 1000)
     } else if (type === 'cancel'){
         clearInterval(countdownLoop);
-        noDisplayChanges('noDisplay', deleteWarningDiv);
+        DisplayChanges('noDisplay', deleteWarningDiv);
     } else if (type === 'confirm'){
         clearInterval(countdownLoop);
-        noDisplayChanges('noDisplay', deleteWarningDiv);
+        DisplayChanges('noDisplay', deleteWarningDiv);
         deleteAccount();
     }
-}
-
-function myStopFunction() {
-  clearInterval(myInterval);
 }
 
 function deleteAccount() {
