@@ -337,6 +337,7 @@ function deleteShow(ShowName1ID){
 }
 
 function RestoreContainer(state){
+    console.log(deletedShows);
     const restoreContainer = document.getElementById('js-restore-deleted-shows-container');
     const deletedShowsContainer = document.getElementById('js-deleted-shows-container');
     if (state === 'open'){
