@@ -106,7 +106,7 @@ function Load(page){
         } else{
             showListContainer.innerHTML = 'You have no shows on this account. <br>To start seeing your watch history go to the home page and add a new show!';
             const editButton = document.getElementById('js-watch-history-edit-button');
-            editButton.setAttribute('style', 'opacity: 20%; pointer-events: none');
+            DisplayChanges('disable', editButton, 20);
         }
         changeTimePeriod('30 days', 'days', 30);
     }
@@ -319,7 +319,10 @@ function checkNameAvailability(name) {
             isNameAvailable = false;
         }
     })
-    if (name.includes('&')){
+    const checkSameValueEl = document.getElementById('check-same-value');
+    checkSameValueEl.innerHTML = name;
+    const nameDup = checkSameValueEl.innerHTML;
+    if (name != nameDup){
         reason = 'containing an invalid character';
         isNameAvailable = false;
     }
@@ -337,16 +340,22 @@ function deleteShow(ShowName1ID){
 }
 
 function RestoreContainer(state){
-    console.log(deletedShows);
     const restoreContainer = document.getElementById('js-restore-deleted-shows-container');
     const deletedShowsContainer = document.getElementById('js-deleted-shows-container');
+    const restoreShowButton = document.getElementById('js-restore-button');
     if (state === 'open'){
         DisplayChanges('display', [restoreContainer, deletedShowsContainer], 15);
-        deletedShowsContainer.innerHTML = '';
-        Object.keys(deletedShows).forEach(function(value, index){
+        if (Object.keys(deletedShows).length != 0){
+            deletedShowsContainer.innerHTML = '';
+            Object.keys(deletedShows).forEach(function(value, index){
             deletedShowsContainer.innerHTML += `<li onclick="activeDeletedShow('${index}')">${value}</li>`;
-        });
-        activeDeletedShow(0);
+            });
+            activeDeletedShow(0);
+        } else{
+            deletedShowsContainer.innerHTML = 'You have no deleted shows';
+            DisplayChanges('disable', restoreShowButton, 15);
+        }
+        
     } else if (state === 'close'){
         DisplayChanges('noDisplay', restoreContainer);
     }

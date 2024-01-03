@@ -346,11 +346,22 @@ button{
     left: 50%;
     top: 50%;
     transform: translate(-50%,-50%);
+    text-align: center;
+}
+#js-restore-deleted-shows-container h1{
+    margin-bottom: 0;
+    font-size: 2.5em;
 }
 #js-deleted-shows-container{
-    border: 1px solid rgb(126, 18, 214);
-    height: 600px;
-    margin-top: 25px;
+    height: 550px;
+    margin-top: 15px;
+}
+#js-deleted-shows-container li{
+    list-style: none;
+    font-size: 2em;
+    word-wrap: break-word;
+    cursor: pointer;
+    color: rgb(226, 117, 114);
 }
 .close-button{
     position: absolute;
@@ -359,5 +370,15 @@ button{
     right: 5px;
     top: 3px;
     color: #68c7ec;
+}
+#js-restore-button{
+    cursor: pointer;
+    margin-top: 5px;
+    padding: 10px 10px;
+    font-size: 1.3em;
+    color: white;
+    background-color: #171717;
+    border: 3px solid rgb(170, 34, 97);
+    border-radius: 5px;
 }
 
