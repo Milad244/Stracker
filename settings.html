@@ -17,17 +17,31 @@
     <main>
         <div id="js-setting-buttons-container">
             <button onclick="downloadData()">Download User Data</button>
-            <button onclick="uploadData()">Upload User Data</button>
+            <button onclick="uploadFile('start')">Upload User Data</button>
             <button onclick="RestoreContainer('open')">Restore deleted shows</button>
             <a href="stats.html"><button>Your Statistics</button></a>
             <button onclick="writeReview()">Write a review</button>
             <button class="important-button" onclick="deleteAccountPrereq('start')">Delete account</button>
         </div>
 
-        <div class="no-display" id="js-delete-account-prereq">
-            <p><span class="important-paragraph">WARNING</span><br>This will permanently delete your account<br>Are you sure you want to proceed?</p>
+        <div class="no-display warning-container" id="js-delete-account-prereq">
+            <p><span class="important-paragraph">WARNING</span><br>This will permanently delete your account.<br>Are you sure you want to proceed?</p>
             <button onclick="deleteAccountPrereq('cancel')">Cancel</button>
-            <button id="js-confirm-delete-account" onclick="deleteAccountPrereq('confirm')">Confirm</button>
+            <button class="warning-button" id="js-confirm-delete-account" onclick="deleteAccountPrereq('confirm')">Confirm</button>
+        </div>
+
+        <div class="no-display popup-container" id="js-upload-file-container">
+            <h2>Please select a user data file</h2>
+            <button onclick="uploadFile('cancel')">Cancel</button>
+            <input type="file" id="js-user-file-elem" accept="application/json" style="display:none"/>
+            <button id="js-file-select-button" type="button" style="border-color: orange">Select user file</button>
+            <button onclick="uploadFile('confirm')">Proceed</button>
+        </div>
+
+        <div class="no-display warning-container" id="js-upload-account-prereq">
+            <p><span class="important-paragraph">WARNING</span><br>We will automatically download you a copy of your current data.<br>But the new user data uploaded will override all your current data.<br>Are you sure you want to proceed?</p>
+            <button onclick="uploadDataPrereq('cancel')">Cancel</button>
+            <button class="warning-button" id="js-confirm-upload-account" onclick="uploadDataPrereq('confirm')">Confirm</button>
         </div>
 
         <div class="no-display" id="js-restore-deleted-shows-container">

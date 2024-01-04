@@ -303,7 +303,9 @@ button{
     border: 3px solid rgb(216, 0, 0) !important;
 }
 
-#js-delete-account-prereq{
+/*Warning Box*/
+
+.warning-container{
     text-align: center;
     font-size: 1.2em;
     border: 3px solid rgb(131, 2, 2);
@@ -318,7 +320,7 @@ button{
     top: 50%;
     transform: translate(-50%,-50%);
 }
-#js-delete-account-prereq button{
+.warning-container button{
     cursor: pointer;
     padding: 10px 10px;
     font-size: 1.1em;
@@ -327,12 +329,42 @@ button{
     border: 3px solid rgb(25, 52, 170);
     border-radius: 5px;
 }
-#js-delete-account-prereq button:hover{
+.warning-container button:hover{
     border-color: rgb(23, 45, 145);
 }
-#js-confirm-delete-account{
+.warning-button{
     margin-left: 20px;
 }
+
+/*Pop-up box*/
+.popup-container{
+    text-align: center;
+    font-size: 1.2em;
+    border: 3px solid rgb(131, 2, 2);
+    border-radius: 5px;
+    width: 60%;
+    max-width: 600px;
+    min-width: 475px;
+    height: 200px;
+    padding-top: 15px;
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%,-50%);
+}
+.popup-container button{
+    cursor: pointer;
+    padding: 10px 10px;
+    font-size: 1.1em;
+    color: white;
+    background-color: #171717;
+    border: 3px solid rgb(25, 52, 170);
+    border-radius: 5px;
+}
+.popup-container button:hover{
+    border-color: rgb(23, 45, 145);
+}
+
 
 /*Restore deleted shows*/
 #js-restore-deleted-shows-container{
@@ -381,4 +413,7 @@ button{
     border: 3px solid rgb(170, 34, 97);
     border-radius: 5px;
 }
+
+/*Upload user data*/
+
 

@@ -395,7 +395,6 @@ function saveCookies() {
 function deleteAccountPrereq(type){
     const deleteWarningDiv = document.getElementById('js-delete-account-prereq');
     const confirmDeleteButton = document.getElementById('js-confirm-delete-account');
-    const allDivElements = document.getElementsByTagName('div');
     if (type === 'start'){
         DisplayChanges('display', deleteWarningDiv, 10);
         DisplayChanges('disable', confirmDeleteButton, 10);
@@ -433,14 +432,13 @@ function deleteAccount() {
     console.log('DELETED');
 }
 
-const allData = {
-    currentShows,
-    showWatchHistory,
-    finishedShows,
-    deletedShows
-}
-
 function downloadData (){
+    const allData = {
+        currentShows,
+        showWatchHistory,
+        finishedShows,
+        deletedShows
+    }
     const currentDate = new Date().toJSON().slice(0, 10);
     const allDataJSON = JSON.stringify(allData);
     const blob = new Blob([allDataJSON], { type: 'application/json' });
@@ -452,3 +450,80 @@ function downloadData (){
     document.body.removeChild(downloadLink);
 }
 
+let uploadedUserData;
+
+function uploadFile(type){
+    const uploadFileContainer = document.getElementById('js-upload-file-container');
+    const fileElement = document.getElementById("js-user-file-elem");
+    const fileSelectButton = document.getElementById("js-file-select-button");
+    if (type === 'start'){
+        DisplayChanges('display', uploadFileContainer, 10);
+        fileSelectButton.onclick = function(){fileElement.click();};
+    } else if (type === 'cancel'){
+        fileElement.value = '';
+        DisplayChanges('noDisplay', uploadFileContainer);
+    } else if (type === 'confirm'){
+        if (fileElement.files.length > 0) {
+            const userDataFile = fileElement.files[0];
+            const reader = new FileReader();
+            reader.readAsText(userDataFile);
+            reader.onload = function (e) {
+            try{
+                uploadedUserData = JSON.parse(e.target.result);
+                if (uploadedUserData.currentShows && uploadedUserData.showWatchHistory && uploadedUserData.finishedShows && uploadedUserData.deletedShows){
+                    fileElement.value = '';
+                    DisplayChanges('noDisplay', uploadFileContainer);
+                    uploadDataPrereq('start');
+                } else{
+                    fileElement.value = '';
+                    alert('Error Invalid File');
+                }
+            } catch{
+                fileElement.value = '';
+                alert('Error Invalid File');
+            }
+            };
+          } else {
+            fileElement.value = '';
+            alert('Error No file selected');
+          }
+    }
+}
+
+function uploadDataPrereq(type){
+    const uploadWarningDiv = document.getElementById('js-upload-account-prereq');
+    const confirmUploadButton = document.getElementById('js-confirm-upload-account');
+    if (type === 'start'){
+        DisplayChanges('display', uploadWarningDiv, 10);
+        DisplayChanges('disable', confirmUploadButton, 10);
+        confirmUploadButton.innerHTML = `Confirm (${5})`
+        let baseNum = 4;
+        countdownLoop = setInterval(() => {
+            let currentNum = baseNum;
+            confirmUploadButton.innerHTML = `Confirm (${baseNum})`
+            currentNum --;
+            baseNum = currentNum;
+            if (baseNum < 0){
+                confirmUploadButton.innerHTML = 'Confirm'
+                DisplayChanges('enable', confirmUploadButton);
+                clearInterval(countdownLoop);
+            }
+        }, 1000)
+    } else if (type === 'cancel'){
+        clearInterval(countdownLoop);
+        DisplayChanges('noDisplay', uploadWarningDiv);
+    } else if (type === 'confirm'){
+        clearInterval(countdownLoop);
+        DisplayChanges('noDisplay', uploadWarningDiv);
+        uploadData();
+    }
+}
+
+function uploadData(){
+    downloadData();
+    localStorage.setItem('currentShows', JSON.stringify(uploadedUserData.currentShows));
+    localStorage.setItem('showWatchHistory', JSON.stringify(uploadedUserData.showWatchHistory));
+    localStorage.setItem('finishedShows', JSON.stringify(uploadedUserData.finishedShows));
+    localStorage.setItem('deletedShows', JSON.stringify(uploadedUserData.deletedShows));
+    window.location = 'index.html';
+}
