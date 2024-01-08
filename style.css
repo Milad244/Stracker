@@ -21,12 +21,13 @@ button{
 }
 #select-nav-container h1{
     font-size: 2em;
-    margin-top: 20px;
+    margin-top: 25px;
     font-size: 3em;
 }
 
 #js-new-show-input{
-    padding: 5px 10px;
+    padding: 10px 15px;
+    font-size: 1em;
     color: white;
     background-color: #171717;
     border: 3px solid rebeccapurple;
@@ -42,7 +43,8 @@ button{
 
 #select-nav-container button{
     cursor: pointer;
-    padding: 5px 10px;
+    padding: 10px 15px;
+    font-size: 1em;
     color: white;
     background-color: #171717;
     border: 3px solid rebeccapurple;
@@ -54,6 +56,14 @@ button{
 }
 #finished-show-button:hover{
     border-color:rgb(247, 87, 247);
+}
+@media only screen and (max-width: 900px){
+    #select-nav-container h1{
+        margin-top: 85px;
+    }
+    #select-nav-container .no-minmax-change{
+        margin-top: 25px;
+    }
 }
 
 #select-nav-container .corner-button{
@@ -279,11 +289,11 @@ button{
     flex-wrap: wrap;
     justify-content: center;
     gap: 10%;
-    margin-top: 30px;
+    margin-top: 20px;
 }
 
 #js-setting-buttons-container button{
-    margin-top: 50px;
+    margin-top: 40px;
     cursor: pointer;
     padding: 10px 10px;
     font-size: 2em;
@@ -414,6 +424,17 @@ button{
     border-radius: 5px;
 }
 
-/*Upload user data*/
+/*Stats*/
+#js-stats-container{
+    text-align: center;
+}
+#js-stats-chart{
+    max-height: 85vh; /* Adjust the value according to your needs */
+    image-rendering: crisp-edges;
+    overflow: hidden;
+}
+#stats-dropdown-p{
+    margin-top: -20px;
+}
 
 

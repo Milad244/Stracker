@@ -9,18 +9,46 @@ const showWatchHistory = JSON.parse(localStorage.getItem('showWatchHistory')) ||
 const finishedShows = JSON.parse(localStorage.getItem('finishedShows')) || {};
 const deletedShows = JSON.parse(localStorage.getItem('deletedShows')) || {};
 //backups
-if (JSON.parse(localStorage.getItem('backup-1.1')) === null) {
-    const allCookies = {
+const Backups = JSON.parse(localStorage.getItem('Stracker-Backups')) || {};
+if (Backups['backup-1.0'] === undefined) {
+    const backupDate = new Date().toJSON().slice(0, 10);
+    Backups['backup-1.0'] = {
         currentShows,
         showWatchHistory,
         finishedShows,
-        deletedShows
+        deletedShows,
+        backupDate
     }
-    localStorage.setItem('backup-1.1', JSON.stringify(allCookies));
+    console.log(Backups);
+    localStorage.setItem('Stracker-Backups', JSON.stringify(Backups));
 } else {
-    //console.log(JSON.parse(localStorage.getItem('backup-1.1')));
+    let latestBackup = [];
+    Object.keys(Backups).forEach(function(value, index){
+        const backupNum = parseFloat(value.replace('backup-', ''));
+        if (backupNum >= latestBackup[0] || latestBackup[0] === undefined){
+            latestBackup[0] = backupNum;
+            latestBackup[1] = value;
+        }
+    });
+    let originalBackupDate = new Date(Backups[latestBackup[1]].backupDate);
+    const Calcdate = originalBackupDate.getTime() + (14 * 24 * 60 * 60 * 1000);
+    originalBackupDate.setTime(Calcdate);
+    const updatedBackupDate = originalBackupDate.toJSON().slice(0, 10);
+    const currentDate = new Date().toJSON().slice(0, 10);
+    if (currentDate >= updatedBackupDate){
+        newBackupNum = (latestBackup[0] + 0.1).toFixed(1);
+        newBackupName = 'backup-' + newBackupNum.toString();
+        const backupDate = new Date().toJSON().slice(0, 10);
+        Backups[newBackupName] = {
+            currentShows,
+            showWatchHistory,
+            finishedShows,
+            deletedShows,
+            backupDate
+        }
+        localStorage.setItem('Stracker-Backups', JSON.stringify(Backups));
+    }
 }
-
 //general functions
 function enterStart(func, event, parameter){ 
     if (event.key === 'Enter') {
@@ -109,6 +137,8 @@ function Load(page){
             DisplayChanges('disable', editButton, 20);
         }
         changeTimePeriod('30 days', 'days', 30);
+    } else if(page === 'stats'){
+        statsCalc('6 months', 'days', 283);
     }
 }
 
@@ -298,6 +328,66 @@ function calcAmountOfShowsAndEpisodes (furthestYearDate, showsArray){
         })
     })
     return [amountOfShows, amountOfEpisodes, showsArray];
+}
+
+function statsCalc(newElementValue, timeVariable, timePeriod){
+    //Changing dropdown text
+    const timePeriodElement = document.getElementById('js-time-period-dropdown-text');
+    timePeriodElement.innerHTML = newElementValue;
+    const dropdownElement = document.querySelector('.dropdown-select');
+    dropdownElement.setAttribute('style', 'pointer-events: none');
+    setTimeout(() => {
+        dropdownElement.setAttribute('style', 'pointer-events: all');
+    }, 1);
+    //calculating the graph numbers
+    const calcStatGraph = (furthestYearDate, episodeArr, dateArr) => {
+        let episodes = 0;
+        Object.keys(showWatchHistory).forEach(function(value, index){
+            const currentShowName = value;
+            showWatchHistory[currentShowName]['Logs'].forEach(function(value, index){
+                const showLogObject = value;
+                if (showLogObject.date === furthestYearDate){
+                    episodes += 1;
+                }
+            })
+        })
+        episodeArr.push(episodes);
+        dateArr.push(furthestYearDate);
+        return [episodeArr, dateArr];
+    }
+    let episodeArr = [];
+    let dateArr = [];
+    if (timeVariable === 'years') {
+        timePeriod *= 365;
+    }
+    let furthestDate = new Date();
+    const Calcdate = furthestDate.getTime() - (timePeriod * 24 * 60 * 60 * 1000);
+    furthestDate.setTime(Calcdate);
+    let furthestYearDate = furthestDate.toJSON().slice(0, 10);
+    for (i = 0; i<timePeriod; i++) {
+        const Calcdate = furthestDate.getTime() + (1 * 24 * 60 * 60 * 1000);
+        furthestDate.setTime(Calcdate);
+        furthestYearDate = furthestDate.toJSON().slice(0, 10);
+        const currentDateCalcedArr = calcStatGraph(furthestYearDate, episodeArr, dateArr);
+        episodeArr = currentDateCalcedArr[0];
+        dateArr = currentDateCalcedArr[1];
+    }
+    //Making graph
+    const statsContainerElem = document.getElementById('js-stats-container');
+    statsContainerElem.innerHTML = `<canvas id="js-stats-chart"></canvas>`;
+    new Chart("js-stats-chart", {
+        type: "line",
+        data: {
+            labels: dateArr,
+            datasets: [{
+            backgroundColor:"rgba(255,255,255,1.0)",
+            data: episodeArr
+            }]
+        },
+        options:{
+            legend: {display: false}
+        }
+        });
 }
 
 function checkNameAvailability(name) {
