@@ -516,8 +516,7 @@ function deleteAccount() {
     localStorage.removeItem('showWatchHistory');
     localStorage.removeItem('finishedShows');
     localStorage.removeItem('deletedShows');
-    localStorage.removeItem('backup-1.0');
-    localStorage.removeItem('backup-1.1');
+    localStorage.removeItem('Stracker-Backups');
     window.location = 'index.html';
     console.log('DELETED');
 }
